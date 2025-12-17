@@ -1,0 +1,53 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-lumina-blue: #2971F7;
+  --color-lumina-yellow: #FED80A;
+  --color-lumina-pink: #FBA0E9;
+  --color-lumina-orange: #F8491A;
+  --color-lumina-green: #37A64A;
+  --color-lumina-dark: #1F2127;
+  --color-lumina-gray: #F2F2F2;
+  --color-lumina-lilac: #ABA0EB;
+  
+  
+  --font-family-serif: 'Instrument Serif', serif;
+  --font-family-sans: 'Manrope', sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-white text-lumina-dark;
+    font-family: var(--font-family-sans);
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-family-serif);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow 3s ease-in-out infinite;
+}
