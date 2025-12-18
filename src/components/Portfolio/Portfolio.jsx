@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { HiX } from 'react-icons/hi';
+import { openWhatsApp } from '../../utils/scrollUtils';
 
 const Portfolio = () => {
   const [isVisible, setIsVisible] = useState(false);
