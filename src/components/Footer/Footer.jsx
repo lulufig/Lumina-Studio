@@ -1,15 +1,15 @@
 const Footer = () => {
   return (
-    <footer className="bg-lumina-orange text-white py-8 md:py-10 px-4 sm:px-6">
+    <footer className="bg-lumina-orange text-white py-4 md:py-5 px-4 sm:px-6 overflow-x-hidden">
       <div className="container mx-auto max-w-7xl">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
           {/* Logo de Lumina */}
-          <a href="#" className="flex items-center group cursor-pointer">
+          <a href="#hero" className="flex items-center group cursor-pointer md:ml-4">
             <div className="relative">
               <img 
-                src="/logo-footer.png" 
+                src={`${import.meta.env.BASE_URL}logo-footer.png`} 
                 alt="Lúmina Logo" 
-                className="h-5 sm:h-6 md:h-8 w-auto transition-all duration-300 group-hover:scale-110 brightness-0 invert"
+                className="h-4 sm:h-4 md:h-5 w-auto transition-all duration-300 group-hover:scale-110 brightness-0 invert"
                 width="52"
                 height="48"
                 loading="lazy"
@@ -20,7 +20,7 @@ const Footer = () => {
           </a>
           
           {/* Copyright */}
-          <div className="font-sans text-center text-sm md:text-base font-medium">
+          <div className="font-sans text-center text-sm md:text-lg font-medium">
             © 2025 DERECHOS RESERVADOS.
           </div>
           
@@ -39,7 +39,7 @@ const Footer = () => {
             </a>
             
             <a 
-              href="https://facebook.com" 
+              href="https://www.facebook.com/profile.php?id=61585444343859" 
               target="_blank"
               rel="noopener noreferrer"
               className="group w-12 h-12 rounded-full bg-white/10 hover:bg-white flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-lg" 

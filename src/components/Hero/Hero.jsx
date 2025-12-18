@@ -3,7 +3,7 @@ import { openWhatsApp } from '../../utils/scrollUtils';
 
 const Hero = () => {
   return (
-    <section id="hero" className="relative bg-lumina-blue min-h-screen flex items-center justify-center overflow-hidden px-4 py-16 md:py-20">
+    <section id="hero" className="relative bg-lumina-blue min-h-screen w-full flex items-center justify-center overflow-x-hidden overflow-y-auto px-4 py-16 md:py-20">
       {/* Efectos 3D de fondo */}
       <Background3DEffects />
       
@@ -26,16 +26,42 @@ const Hero = () => {
         ))}
       </div>
 
+     {/* GIFs decorativos */}
+      {/* Asterisco naranja - lado izquierdo del título */}
+      <div
+        className="absolute top-[22%] left-[12%] w-[140px] h-[140px] xs:top-[13%] xs:left-[50%] xs:w-32 xs:h-32 sm:top-[20%] sm:left-[20%] sm:w-[140px] sm:h-[140px] animate-float z-10"
+      >
+        <img
+          src={`${import.meta.env.BASE_URL}asterisco-naranja.gif`}
+          alt="Asterisco decorativo"
+          className="w-full h-full drop-shadow-glow-orange"
+          loading="eager"
+        />
+      </div>
+
+      {/* Semicírculos amarillos - lado derecho más abajo */}
+      <div 
+        className="absolute top-[72%] right-[12%] w-[140px] h-[140px] xs:top-[70%] xs:right-[20%] xs:w-32 xs:h-32 sm:top-[72%] sm:right-[20%] sm:w-[140px] sm:h-[140px] animate-float z-10"
+        style={{ animationDelay: '1s' }}
+      >
+        <img 
+          src={`${import.meta.env.BASE_URL}semicirculos-amarillos.gif`}
+          alt="Semicírculos decorativos"
+          className="w-full h-full drop-shadow-glow-yellow"
+          loading="eager"
+        />
+      </div>
+
 
       {/* Contenido principal */}
-      <div className="container mx-auto text-center relative z-20 max-w-6xl">
-        <h1 className="font-InstrumentSerif mt-20 sm:mt-24 md:mt-29 text-[2.5rem] sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-white leading-tight mb-6 sm:mb-8 md:mb-10 tracking-tight animate-fade-in-up px-2">
+      <div className="container mx-auto text-center relative z-20 max-w-2xl">
+        <h1 className="font-InstrumentSerif mt-20 sm:mt-20 md:mt-28 text-[2.5rem] sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-white leading-tight mb-6 sm:mb-6 md:mb-10 tracking-tight animate-fade-in-up px-2">
           <span className="inline-block bg-linear-to-r from-white via-white to-white/90 bg-clip-text text-transparent drop-shadow-lg">
             Diseño y luz para tus<br />
             momentos especiales.
           </span>
         </h1>
-        <p className="font-Manrope text-base sm:text-lg md:text-xl lg:text-2xl text-white/95 mb-8 sm:mb-10 md:mb-12 max-w-4xl mx-auto leading-relaxed px-4 animate-fade-in-up-delay">
+        <p className="font-Manrope text-base sm:text-lg md:text-xl lg:text-2xl text-white/95 mb-8 sm:mb-10 md:mb-12 max-w-3xl mx-auto leading-relaxed px-4 animate-fade-in-up-delay">
           Creamos invitaciones digitales y landing pages que hacen brillar tu evento desde el primer click.
         </p>
         <div className="animate-fade-in-up-delay-2">

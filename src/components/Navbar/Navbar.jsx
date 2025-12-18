@@ -76,13 +76,13 @@ const Navbar = () => {
         ? 'bg-lumina-blue/95 backdrop-blur-xl shadow-lg py-2 max-h-26' 
         : 'bg-transparent py-3 max-h-24'
     }`}>
-      <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
+      <div className="container mx-auto px-4 sm:px-6 max-w-6xl w-full">
         <div className="flex items-center justify-between">
           {/* Logo mejorado */}
-          <a href="#" className="flex items-center gap-2 md:gap-3 group cursor-pointer shrink-0">
-            <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24">
+          <a href="#hero" className="flex items-center gap-2 md:gap-3 group cursor-pointer shrink-0" onClick={(e) => handleNavClick(e, 'hero')}>
+            <div className="relative w-20 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24">
               <img 
-                src="/logo.png" 
+                src={`${import.meta.env.BASE_URL}logo.png`} 
                 alt="Lúmina logo" 
                 className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
                 width="96"
@@ -93,7 +93,7 @@ const Navbar = () => {
           </a>
 
           {/* Enlaces Desktop */}
-          <div className="hidden md:flex items-center gap-10">
+          <div className="hidden md:flex md:items-center md:gap-4">
             {navLinks.map((link) => {
               const sectionId = link.href.substring(1);
               return (
@@ -101,7 +101,7 @@ const Navbar = () => {
                   key={link.href}
                   href={link.href}
                   onClick={(e) => handleNavClick(e, sectionId)}
-                  className={`relative px-15 py-3.5 rounded-full font-Manrope font-semibold transition-all duration-300 cursor-pointer ${
+                  className={`relative px-12 py-3.5 rounded-full font-Manrope font-semibold transition-all duration-300 cursor-pointer ${
                     activeSection === sectionId
                       ? 'text-white bg-white/15'
                       : 'text-white/90 hover:text-white hover:bg-white/10'

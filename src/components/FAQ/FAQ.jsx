@@ -42,7 +42,7 @@ const FAQ = () => {
   };
 
   return (
-    <section id="faq" className="bg-white py-16 md:py-24 px-6">
+    <section id="faq" className="bg-white py-16 md:py-24 px-6 overflow-x-hidden">
       <div className="container mx-auto max-w-3xl">
         <motion.h2
           className="font-InstrumentSerif text-3xl sm:text-4xl md:text-5xl text-lumina-blue text-center mb-8 sm:mb-12 px-4"

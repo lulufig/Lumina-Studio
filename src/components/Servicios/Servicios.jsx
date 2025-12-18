@@ -4,7 +4,7 @@ import { openWhatsApp } from '../../utils/scrollUtils';
 
 const Servicios = () => {
   return (
-    <section id="servicios" className="bg-white py-16 md:py-24 px-6">
+    <section id="servicios" className="bg-white py-16 md:py-24 px-6 overflow-x-hidden">
       <div className="container mx-auto">
         <motion.h2
           className="font-InstrumentSerif text-5xl md:text-6xl text-lumina-blue text-center mb-16"
@@ -16,7 +16,7 @@ const Servicios = () => {
           Qué hacemos
         </motion.h2>
         
-        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {/* Tarjeta Invitaciones Digitales */}
           <motion.div
             className="bg-lumina-green rounded-2xl md:rounded-3xl p-6 sm:p-8 text-white"
