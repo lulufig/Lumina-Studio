@@ -24,8 +24,8 @@ const Portfolio = () => {
     {
       id: 3,
       image: `${import.meta.env.BASE_URL}invitaciones/graduacion.png`, 
-      title: 'Graduación - Colegio Nacional de Buenos Aires',
-      description: 'Invitación digital para la graduación de un colegio nacional.'
+      title: 'Graduación',
+      description: 'Invitación digital para la graduación de un colegio.'
     },
     {
       id: 4,
@@ -168,7 +168,7 @@ const Portfolio = () => {
               <div
                 key={project.id}
                 onClick={() => setSelectedProject(project)}
-                className="group relative aspect-[430/600] rounded-2xl overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 bg-lumina-gray"
+                className="group relative aspect-430/600 rounded-2xl overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 bg-lumina-gray"
               >
                 <img 
                   src={project.image} 

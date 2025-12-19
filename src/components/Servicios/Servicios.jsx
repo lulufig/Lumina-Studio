@@ -32,7 +32,7 @@ const Servicios = () => {
           >
             <h3 className="font-InstrumentSerif text-2xl sm:text-3xl mb-4">Invitaciones digitales</h3>
             <p className="font-Manrope text-white/90 mb-6 text-sm sm:text-base">
-              Creamos invitaciones en formato web. <br /> Son dinámicas, interactivas y super prácticas <br /> para compartir. <br /> Elegí entre tres packs según el estilo y nivel de personalización que quieras.
+              Creamos invitaciones en formato web.  Son dinámicas, interactivas y super prácticas  para compartir. Elegí entre tres packs según el estilo y nivel de personalización que quieras.
             </p>
             <motion.button
               onClick={openWhatsApp}
@@ -63,7 +63,7 @@ const Servicios = () => {
           >
             <h3 className="font-InstrumentSerif text-2xl sm:text-3xl mb-4">Landing Page</h3>
             <p className="font-Manrope text-white/90 mb-6 text-sm sm:text-base">
-              Desarrollamos landing pages modernas y <br /> optimizadas para emprendedores, negocios y <br /> proyectos personales. <br /> Ideales para presentar servicios, productos o <br /> ideas de forma clara, atractiva y profesional.
+              Desarrollamos landing pages modernas y  optimizadas para emprendedores, negocios y  proyectos personales.  Ideales para presentar servicios, productos o  ideas de forma clara, atractiva y profesional.
             </p>
             <motion.button
               onClick={openWhatsApp}
