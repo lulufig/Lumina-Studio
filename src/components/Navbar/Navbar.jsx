@@ -46,7 +46,7 @@ const Navbar = () => {
 
     // Ejecutar al cargar para verificar posición inicial
     handleScroll();
-    
+
     window.addEventListener('scroll', handleScroll);
     window.addEventListener('resize', handleScroll);
     return () => {
@@ -97,9 +97,9 @@ const Navbar = () => {
             {navLinks.map((link) => {
               const sectionId = link.href.substring(1);
               return (
-                <a
-                  key={link.href}
-                  href={link.href}
+              <a
+                key={link.href}
+                href={link.href}
                   onClick={(e) => handleNavClick(e, sectionId)}
                   className={`relative px-12 py-3.5 rounded-full font-Manrope font-semibold transition-all duration-300 cursor-pointer ${
                     activeSection === sectionId
@@ -108,34 +108,34 @@ const Navbar = () => {
                   }`}
                 >
                   {link.label}
-                  {/* Indicador de sección activa */}
+                {/* Indicador de sección activa */}
                   {activeSection === sectionId && (
                     <span className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-lumina-yellow rounded-full"></span>
-                  )}
-                </a>
+                )}
+              </a>
               );
             })}
           </div>
 
           {/* Botón Hamburguesa (Mobile) */}
-          <button
-            onClick={toggleMobileMenu}
+            <button
+              onClick={toggleMobileMenu}
             className="md:hidden relative w-11 h-11 flex items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-all duration-300"
             aria-label={isMobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
             aria-expanded={isMobileMenuOpen}
-          >
-            <div className="w-5 h-4 relative flex flex-col justify-between">
-              <span className={`w-full h-0.5 bg-white rounded-full transition-all duration-300 ${
-                isMobileMenuOpen ? 'rotate-45 translate-y-1.5' : ''
-              }`}></span>
-              <span className={`w-full h-0.5 bg-white rounded-full transition-all duration-300 ${
-                isMobileMenuOpen ? 'opacity-0' : ''
-              }`}></span>
-              <span className={`w-full h-0.5 bg-white rounded-full transition-all duration-300 ${
-                isMobileMenuOpen ? '-rotate-45 -translate-y-2' : ''
-              }`}></span>
-            </div>
-          </button>
+            >
+              <div className="w-5 h-4 relative flex flex-col justify-between">
+                <span className={`w-full h-0.5 bg-white rounded-full transition-all duration-300 ${
+                  isMobileMenuOpen ? 'rotate-45 translate-y-1.5' : ''
+                }`}></span>
+                <span className={`w-full h-0.5 bg-white rounded-full transition-all duration-300 ${
+                  isMobileMenuOpen ? 'opacity-0' : ''
+                }`}></span>
+                <span className={`w-full h-0.5 bg-white rounded-full transition-all duration-300 ${
+                  isMobileMenuOpen ? '-rotate-45 -translate-y-2' : ''
+                }`}></span>
+              </div>
+            </button>
         </div>
 
         {/* Menú Mobile mejorado */}
@@ -147,9 +147,9 @@ const Navbar = () => {
               {navLinks.map((link, index) => {
                 const sectionId = link.href.substring(1);
                 return (
-                  <a
-                    key={link.href}
-                    href={link.href}
+                <a
+                  key={link.href}
+                  href={link.href}
                     onClick={(e) => {
                       handleNavClick(e, sectionId);
                       closeMobileMenu();
@@ -158,11 +158,11 @@ const Navbar = () => {
                       activeSection === sectionId
                         ? 'bg-white/20 text-white'
                         : 'text-white/90 hover:bg-white/10 hover:text-white'
-                    }`}
-                    style={{
-                      animation: isMobileMenuOpen ? `slideIn 0.3s ease-out ${index * 0.1}s both` : 'none'
-                    }}
-                  >
+                  }`}
+                  style={{
+                    animation: isMobileMenuOpen ? `slideIn 0.3s ease-out ${index * 0.1}s both` : 'none'
+                  }}
+                >
                     <span>{link.label}</span>
                     {activeSection === sectionId && (
                       <span className="w-2 h-2 bg-lumina-gray rounded-full"></span>
@@ -173,9 +173,9 @@ const Navbar = () => {
                       stroke="currentColor" 
                       viewBox="0 0 24 24"
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </a>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </a>
                 );
               })}
             </div>

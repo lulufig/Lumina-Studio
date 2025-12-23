@@ -1,13 +1,75 @@
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { HiCheck, HiX, HiCreditCard, HiChat, HiDocumentText } from 'react-icons/hi';
+import { 
+  HiCheck, 
+  HiX, 
+  HiCreditCard, 
+  HiChat, 
+  HiDocumentText,
+  HiTemplate,
+  HiLocationMarker,
+  HiClock,
+  HiCalendar,
+  HiMusicNote,
+  HiHeart,
+  HiPhotograph,
+  HiUser,
+  HiMicrophone,
+  HiTable,
+  HiCube,
+  HiSparkles
+} from 'react-icons/hi';
 import { openWhatsApp } from '../../utils/scrollUtils';
 import BankTransferModal from './BankTransferModal';
 
 const Pricing = ({ onOpenEventForm }) => {
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const getFeatureIcon = (text) => {
+    const normalizedText = text.toLowerCase();
+    if (normalizedText.includes('diseño') || normalizedText.includes('personalizado')) {
+      return HiTemplate;
+    }
+    if (normalizedText.includes('whatsapp') || normalizedText.includes('confirmación')) {
+      return HiChat;
+    }
+    if (normalizedText.includes('ubicación') || normalizedText.includes('maps')) {
+      return HiLocationMarker;
+    }
+    if (normalizedText.includes('cuenta regresiva') || normalizedText.includes('regresiva')) {
+      return HiClock;
+    }
+    if (normalizedText.includes('calendario') || normalizedText.includes('agendar')) {
+      return HiCalendar;
+    }
+    if (normalizedText.includes('música') || normalizedText.includes('música')) {
+      return HiMusicNote;
+    }
+    if (normalizedText.includes('historia') || normalizedText.includes('nuestra')) {
+      return HiHeart;
+    }
+    if (normalizedText.includes('galería') && normalizedText.includes('ilimitada')) {
+      return HiSparkles;
+    }
+    if (normalizedText.includes('galería') || normalizedText.includes('fotos')) {
+      return HiPhotograph;
+    }
+    if (normalizedText.includes('dress code')) {
+      return HiUser;
+    }
+    if (normalizedText.includes('audio') || normalizedText.includes('guestbook')) {
+      return HiMicrophone;
+    }
+    if (normalizedText.includes('gestión') || normalizedText.includes('invitados') || normalizedText.includes('excel')) {
+      return HiTable;
+    }
+    if (normalizedText.includes('juego') || normalizedText.includes('interactivo')) {
+      return HiCube;
+    }
+    return HiTemplate; // Icono por defecto
+  };
 
   const plans = [
     {
@@ -19,44 +81,51 @@ const Pricing = ({ onOpenEventForm }) => {
         { text: 'Confirmación por Whatsapp', included: true },
         { text: 'Ubicación en Google Maps', included: true },
         { text: 'Cuenta regresiva', included: true },
-        { text: 'Sección nuestra historia', included: false },
+        { text: 'Botón Agendar Calendario', included: true },
+        { text: 'Nuestra Historia', included: true },
+        { text: 'Música de Fondo', included: false },
         { text: 'Galería de fotos', included: false },
-        { text: 'Juego interactivo', included: false },
-        { text: 'Música', included: false },
-        { text: 'Gestión de invitados', included: false },
-      ],
-    },
-    {
-      name: 'Invitación Lúmina Pro',
-      price: '$55.000 ARS',
-      color: 'bg-lumina-blue',
-      highlighted: true,
-      features: [
-        { text: 'Diseño personalizado', included: true },
-        { text: 'Confirmación por Whatsapp o email', included: true },
-        { text: 'Ubicación en Google Maps', included: true },
-        { text: 'Cuenta regresiva', included: true },
-        { text: 'Sección nuestra historia', included: true },
-        { text: 'Galería de fotos', included: true },
-        { text: 'Juego interactivo', included: true },
-        { text: 'Música', included: true },
-        { text: 'Gestión de invitados', included: true },
       ],
     },
     {
       name: 'Invitación Prisma',
-      price: '$45.000 ARS',
+      price: '$48.000 ARS',
       color: 'bg-lumina-green',
+      highlighted: true,
       features: [
         { text: 'Diseño personalizado', included: true },
         { text: 'Confirmación por Whatsapp', included: true },
         { text: 'Ubicación en Google Maps', included: true },
         { text: 'Cuenta regresiva', included: true },
-        { text: 'Sección nuestra historia', included: true },
-        { text: 'Galería de fotos', included: false },
-        { text: 'Juego interactivo', included: false },
-        { text: 'Música', included: false },
-        { text: 'Gestión de invitados', included: false },
+        { text: 'Botón Agendar Calendario', included: true },
+        { text: 'Música de Fondo', included: true },
+        { text: 'Nuestra Historia', included: true },
+        { text: 'Galería (3 fotos)', included: true },
+        { text: 'Dress Code', included: true },
+        { text: 'Audio Guestbook', included: false },
+        { text: 'Gestión de Invitados (Excel)', included: false },
+        { text: 'Juego Interactivo', included: false },
+        { text: 'Galería Ilimitada', included: false },
+      ],
+    },
+    {
+      name: 'Invitación Lúmina PRO',
+      price: '$60.000 ARS',
+      color: 'bg-lumina-blue',
+      features: [
+        { text: 'Diseño personalizado', included: true },
+        { text: 'Confirmación por Whatsapp', included: true },
+        { text: 'Ubicación en Google Maps', included: true },
+        { text: 'Cuenta regresiva', included: true },
+        { text: 'Botón Agendar Calendario', included: true },
+        { text: 'Música de Fondo', included: true },
+        { text: 'Nuestra Historia', included: true },
+        { text: 'Galería (3 fotos)', included: true },
+        { text: 'Dress Code', included: true },
+        { text: 'Audio Guestbook', included: true },
+        { text: 'Gestión de Invitados (Excel)', included: true },
+        { text: 'Juego Interactivo', included: true },
+        { text: 'Galería Ilimitada', included: true },
       ],
     },
   ];
@@ -102,11 +171,11 @@ const Pricing = ({ onOpenEventForm }) => {
             Tu evento, tu estilo. Elegí tu plan.
           </motion.p>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto items-stretch">
             {plans.map((plan, index) => (
               <motion.div
                 key={index}
-                className={`${plan.color} font-Manrope font-regular rounded-2xl md:rounded-3xl p-4 sm:p-6 text-white relative ${plan.highlighted ? 'md:-mt-4' : ''}`}
+                className={`${plan.color} font-Manrope font-regular rounded-2xl md:rounded-3xl p-5 sm:p-6 text-white relative flex flex-col h-full ${plan.highlighted ? 'md:-mt-4' : ''}`}
                 custom={index}
                 variants={cardVariants}
                 initial="hidden"
@@ -124,25 +193,29 @@ const Pricing = ({ onOpenEventForm }) => {
                   </div>
                 )}
               <h3 className="font-Manrope font-regular text-lg sm:text-xl mb-2 sm:mb-3">{plan.name}</h3>
-              <div className="font-InstrumentSerif text-xl sm:text-2xl md:text-3xl mb-3 sm:mb-4">
+              <div className="font-InstrumentSerif text-xl sm:text-2xl md:text-3xl mb-4 sm:mb-5">
                 <span className="text-base sm:text-lg md:text-xl">$</span>
                 {plan.price.replace('$', '')}
               </div>
-                <ul className="space-y-1.5 sm:space-y-2 mb-4 sm:mb-6">
-                  {plan.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-center gap-2 sm:gap-3 font-Manrope">
-                      {feature.included ? (
-                        <HiCheck className="w-4 h-4 shrink-0" />
-                      ) : (
-                        <HiX className="w-4 h-4 shrink-0" />
-                      )}
-                      <span className="text-xs sm:text-sm wrap-break-word">{feature.text}</span>
-                    </li>
-                  ))}
+                <ul className="space-y-2 sm:space-y-2.5 mb-5 sm:mb-6 grow">
+                  {plan.features.map((feature, idx) => {
+                    const FeatureIcon = getFeatureIcon(feature.text);
+                    return (
+                      <li key={idx} className="flex items-center gap-2 sm:gap-3 font-Manrope">
+                        {feature.included ? (
+                          <HiCheck className="w-4 h-4 shrink-0" />
+                        ) : (
+                          <HiX className="w-4 h-4 shrink-0" />
+                        )}
+                        <FeatureIcon className="w-4 h-4 shrink-0" />
+                        <span className="text-sm sm:text-base wrap-break-word">{feature.text}</span>
+                      </li>
+                    );
+                  })}
                 </ul>
                 
                 {/* Botones de pago - Dos opciones */}
-                <div className="space-y-2 sm:space-y-3">
+                <div className="space-y-2 sm:space-y-2.5 mt-auto">
                   {/* Botón Transferencia Bancaria */}
                   <motion.button
                     onClick={() => handleTransferClick(plan)}
