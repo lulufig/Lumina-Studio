@@ -1,9 +1,40 @@
+// eslint-disable-next-line no-unused-vars
+import { motion } from 'framer-motion';
 import Background3DEffects from './Background3DEffects';
 import { openWhatsApp } from '../../utils/scrollUtils';
 
 const Hero = () => {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.3,
+        delayChildren: 0.3,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 1.2,
+        ease: [0.16, 1, 0.3, 1],
+      },
+    },
+  };
+
   return (
-    <section id="hero" className="relative bg-lumina-blue min-h-screen w-full flex items-center justify-center overflow-x-hidden overflow-y-auto px-4 py-16 md:py-20">
+    <motion.section 
+      id="hero" 
+      className="relative bg-lumina-blue min-h-screen w-full flex items-center justify-center overflow-x-hidden overflow-y-auto px-4 py-16 md:py-20"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
       {/* Efectos 3D de fondo */}
       <Background3DEffects />
       
@@ -54,28 +85,39 @@ const Hero = () => {
 
 
       {/* Contenido principal */}
-      <div className="container mx-auto text-center relative z-20 max-w-2xl">
-        <h1 className="font-InstrumentSerif mt-20 sm:mt-20 md:mt-28 text-[2.5rem] sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-white leading-tight mb-6 sm:mb-6 md:mb-10 tracking-tight animate-fade-in-up px-2">
+      <motion.div 
+        className="container mx-auto text-center relative z-20 max-w-2xl"
+        variants={containerVariants}
+      >
+        <motion.h1 
+          className="font-InstrumentSerif mt-20 sm:mt-20 md:mt-28 text-[2.5rem] sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-white leading-tight mb-6 sm:mb-6 md:mb-10 tracking-tight px-2"
+          variants={itemVariants}
+        >
           <span className="inline-block bg-linear-to-r from-white via-white to-white/90 bg-clip-text text-transparent drop-shadow-lg">
             Diseño y luz para tus<br />
             momentos especiales.
           </span>
-        </h1>
-        <p className="font-Manrope text-base sm:text-lg md:text-xl lg:text-2xl text-white/95 mb-8 sm:mb-10 md:mb-12 max-w-3xl mx-auto leading-relaxed px-4 animate-fade-in-up-delay">
+        </motion.h1>
+        <motion.p 
+          className="font-Manrope text-base sm:text-lg md:text-xl lg:text-2xl text-white/95 mb-8 sm:mb-10 md:mb-12 max-w-3xl mx-auto leading-relaxed px-4"
+          variants={itemVariants}
+        >
           Creamos invitaciones digitales y landing pages que hacen brillar tu evento desde el primer click.
-        </p>
-        <div className="animate-fade-in-up-delay-2">
-          <button 
+        </motion.p>
+        <motion.div variants={itemVariants}>
+          <motion.button 
             onClick={openWhatsApp}
             aria-label="Contactanos por WhatsApp"
-            className="group relative bg-lumina-pink text-white font-Manrope font-extrabold text-base md:text-lg px-5 py-3 md:px-10 md:py-4 rounded-full hover:bg-[#F98FE0] hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-lumina-pink/50 cursor-pointer overflow-hidden"
+            className="group relative bg-lumina-pink text-white font-Manrope font-extrabold text-base md:text-lg px-5 py-3 md:px-10 md:py-4 rounded-full hover:bg-pink-50 hover:text-lumina-pink hover:border hover:border-lumina-pink transition-all duration-300 shadow-lg hover:shadow-2xl hover:shadow-lumina-pink/50 cursor-pointer overflow-hidden border border-transparent"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.98 }}
           >
             {/* Efecto de brillo animado */}
             <span className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
             <span className="relative z-10">Contactanos</span>
-          </button>
-        </div>
-      </div>
+          </motion.button>
+        </motion.div>
+      </motion.div>
 
       {/* Estilos de animación */}
       <style>{`
@@ -204,7 +246,7 @@ const Hero = () => {
           }
         }
       `}</style>
-    </section>
+    </motion.section>
   );
 };
 

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
-import { HiPlus, HiX } from 'react-icons/hi';
 
 const FAQ = () => {
   const [openIndex, setOpenIndex] = useState(null);
@@ -9,31 +8,27 @@ const FAQ = () => {
   const faqs = [
     {
       question: '¿Cómo funcionan las invitaciones digitales?',
-      answer: 'Las invitaciones digitales son páginas web personalizadas que puedes compartir por WhatsApp, email o redes sociales. Tus invitados acceden con un simple click y pueden confirmar su asistencia directamente desde la invitación.',
+      answer: 'Son sitios web diseñados específicamente para verse increíbles en celulares. Te entregamos un link único que podés enviar por WhatsApp a todos tus invitados sin límite.',
     },
     {
       question: '¿Las invitaciones y landings funcionan en el celular?',
-      answer: '¡Absolutamente! Todas nuestras invitaciones y landing pages están diseñadas para verse perfectas en cualquier dispositivo: celular, tablet o computadora. Son 100% responsive.',
+      answer: '¡Sí, es nuestra prioridad! Diseñamos con enfoque "Mobile First", asegurando que se vea perfecto en cualquier smartphone, Android o iPhone.',
     },
     {
       question: '¿Puedo pedir una landing aunque no sea para un evento?',
-      answer: '¡Por supuesto! Creamos landing pages para emprendedores, negocios, proyectos personales y cualquier idea que quieras presentar de forma profesional y atractiva.',
+      answer: '¡Claro! Nuestro servicio "Landing Page Comercial" es ideal para profesionales, emprendedores y negocios que necesitan vender servicios o mostrar un portfolio.',
     },
     {
       question: '¿Cuánto tarda el proceso?',
-      answer: 'El tiempo de entrega depende del plan que elijas y la complejidad del proyecto. Generalmente, las invitaciones Flash se entregan en 3-5 días hábiles, mientras que los planes Pro y Prisma pueden tomar entre 7-10 días hábiles.',
+      answer: 'Dependiendo del plan, entre 3 a 7 días hábiles desde que nos entregás la información completa.',
     },
     {
       question: '¿Qué necesito enviarles para arrancar?',
-      answer: 'Necesitamos información básica como fecha del evento, nombres, ubicación, colores preferidos, fotos y cualquier detalle especial que quieras incluir. Te enviaremos un formulario completo para que sea fácil compartir toda la información.',
-    },
-    {
-      question: '¿Puedo compartir el link cuantas veces quiera?',
-      answer: '¡Sí! Una vez que tu invitación o landing esté lista, recibirás un link único que puedes compartir todas las veces que quieras, con quien quieras, sin límites.',
+      answer: 'Solo necesitamos los textos básicos (fecha, lugar, nombres) y las fotos que quieras incluir. Nosotros te guiamos con un formulario simple.',
     },
     {
       question: '¿Se puede actualizar la información después de publicado?',
-      answer: 'Sí, podemos hacer actualizaciones después de publicado. Dependiendo del tipo de cambio, puede haber un costo adicional. Siempre te avisamos antes de hacer cualquier modificación.',
+      answer: 'Sí. En los Menús Digitales la actualización es inmediata vía Google Sheets. En Invitaciones, podés solicitar cambios puntuales (como cambio de horario) sin problema.',
     },
   ];
 
@@ -44,56 +39,90 @@ const FAQ = () => {
   return (
     <section id="faq" className="bg-white py-16 md:py-24 px-6 overflow-x-hidden">
       <div className="container mx-auto max-w-3xl">
-        <motion.h2
-          className="font-InstrumentSerif text-3xl sm:text-4xl md:text-5xl text-lumina-blue text-center mb-8 sm:mb-12 px-4"
-          initial={{ opacity: 0, y: 20 }}
+        {/* Header */}
+        <motion.div
+          className="text-center mb-12 md:mb-16"
+          initial={{ opacity: 0, y: -40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 1.2 }}
+          viewport={{ once: true, amount: 0.6 }}
+          transition={{ 
+            duration: 1,
+            ease: [0.16, 1, 0.3, 1]
+          }}
         >
-          Por si te lo estás preguntando
-        </motion.h2>
+          <motion.h2 
+            className="font-InstrumentSerif text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-lumina-blue mb-4"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, delay: 0.2 }}
+          >
+            Por si te lo estás preguntando
+          </motion.h2>
+          <motion.p 
+            className="font-Manrope text-base md:text-lg text-gray-600"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, delay: 0.4 }}
+          >
+            Despejamos tus dudas antes de empezar.
+          </motion.p>
+        </motion.div>
         
+        {/* Accordion */}
         <div className="space-y-0">
           {faqs.map((faq, index) => (
             <motion.div
               key={index}
-              className="border-b border-gray-300 overflow-hidden"
-              layout
+              className="border-b border-gray-200 overflow-hidden"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.4 }}
+              transition={{ duration: 0.8, delay: index * 0.15 }}
             >
               <motion.button
-                className="w-full text-left font-Manrope font-regular text-gray-700 text-base sm:text-lg hover:text-lumina-blue transition-colors py-4 sm:py-6 flex items-center justify-between gap-4"
+                className="w-full text-left font-Manrope font-medium text-gray-800 text-base md:text-lg py-4 md:py-5 flex items-center justify-between gap-4 hover:text-gray-900 transition-colors"
                 onClick={() => toggleQuestion(index)}
-                whileHover={{ color: '#2971F7' }}
+                aria-expanded={openIndex === index}
+                aria-controls={`faq-answer-${index}`}
+                whileHover={{ x: 5 }}
+                transition={{ duration: 0.2 }}
               >
-                <span>{faq.question}</span>
-                <motion.div
-                  animate={{ rotate: openIndex === index ? 45 : 0 }}
-                  transition={{ duration: 0.6 }}
+                <span className="pr-8">{faq.question}</span>
+                <motion.svg
+                  className="w-5 h-5 text-blue-600 shrink-0"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  animate={{ rotate: openIndex === index ? 180 : 0 }}
+                  transition={{ duration: 0.3, ease: 'easeInOut' }}
                 >
-                  {openIndex === index ? (
-                    <HiX className="w-6 h-6 shrink-0 ml-4" />
-                  ) : (
-                    <HiPlus className="w-6 h-6 shrink-0 ml-4" />
-                  )}
-                </motion.div>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </motion.svg>
               </motion.button>
+              
               <AnimatePresence>
                 {openIndex === index && (
                   <motion.div
-                    layout
+                    id={`faq-answer-${index}`}
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.6, ease: 'easeInOut' }}
+                    transition={{ duration: 0.3, ease: 'easeInOut' }}
                     className="overflow-hidden"
                   >
                     <motion.p
-                      className="font-Manrope text-gray-600 pb-4 sm:pb-6 pr-4 sm:pr-12 text-sm sm:text-base"
+                      className="font-Manrope font-normal text-gray-600 pb-4 md:pb-5 pr-12 text-sm md:text-base leading-relaxed"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      transition={{ duration: 0.4, delay: 0.2 }}
+                      transition={{ duration: 0.2, delay: 0.1 }}
                     >
                       {faq.answer}
                     </motion.p>

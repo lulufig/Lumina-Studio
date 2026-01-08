@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+// eslint-disable-next-line no-unused-vars
+import { motion, AnimatePresence } from 'framer-motion';
 import { handleNavClick } from '../../utils/scrollUtils';
 
 const Navbar = () => {
@@ -32,7 +34,7 @@ const Navbar = () => {
       setIsScrolled(!isInHero || scrollY > 100);
       
       // Detectar sección activa
-      const sections = ['nosotras', 'servicios', 'portfolio', 'faq'];
+      const sections = ['hero', 'nosotras', 'servicios', 'soluciones', 'faq'];
       const current = sections.find(section => {
         const element = document.getElementById(section);
         if (element) {
@@ -66,7 +68,7 @@ const Navbar = () => {
   const navLinks = [
     { href: '#nosotras', label: 'Nosotras' },
     { href: '#servicios', label: 'Servicios' },
-    { href: '#portfolio', label: 'Portfolio' },
+    { href: '#soluciones', label: 'Soluciones' },
     { href: '#faq', label: 'FAQ' }
   ];
 
@@ -79,7 +81,13 @@ const Navbar = () => {
       <div className="container mx-auto px-4 sm:px-6 max-w-6xl w-full">
         <div className="flex items-center justify-between">
           {/* Logo mejorado */}
-          <a href="#hero" className="flex items-center gap-2 md:gap-3 group cursor-pointer shrink-0" onClick={(e) => handleNavClick(e, 'hero')}>
+          <motion.a 
+            href="#hero" 
+            className="flex items-center gap-2 md:gap-3 group cursor-pointer shrink-0" 
+            onClick={(e) => handleNavClick(e, 'hero')}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
             <div className="relative w-20 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24">
               <img 
                 src={`${import.meta.env.BASE_URL}logo.png`} 
@@ -90,39 +98,51 @@ const Navbar = () => {
                 loading="lazy"
               />
             </div>
-          </a>
+          </motion.a>
 
           {/* Enlaces Desktop */}
           <div className="hidden md:flex md:items-center md:gap-4">
             {navLinks.map((link) => {
               const sectionId = link.href.substring(1);
               return (
-              <a
+              <motion.a
                 key={link.href}
                 href={link.href}
-                  onClick={(e) => handleNavClick(e, sectionId)}
-                  className={`relative px-12 py-3.5 rounded-full font-Manrope font-semibold transition-all duration-300 cursor-pointer ${
-                    activeSection === sectionId
-                      ? 'text-white bg-white/15'
-                      : 'text-white/90 hover:text-white hover:bg-white/10'
-                  }`}
-                >
-                  {link.label}
+                onClick={(e) => handleNavClick(e, sectionId)}
+                className={`relative px-12 py-3.5 rounded-full font-Manrope font-semibold transition-all duration-300 cursor-pointer ${
+                  activeSection === sectionId
+                    ? 'text-white bg-white/15'
+                    : 'text-white/90 hover:text-white hover:bg-white/10'
+                }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {link.label}
                 {/* Indicador de sección activa */}
+                <AnimatePresence>
                   {activeSection === sectionId && (
-                    <span className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-lumina-yellow rounded-full"></span>
-                )}
-              </a>
+                    <motion.span 
+                      className="absolute bottom-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-lumina-yellow rounded-full"
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0, opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  )}
+                </AnimatePresence>
+              </motion.a>
               );
             })}
           </div>
 
           {/* Botón Hamburguesa (Mobile) */}
-            <button
+            <motion.button
               onClick={toggleMobileMenu}
             className="md:hidden relative w-11 h-11 flex items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-all duration-300"
             aria-label={isMobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
             aria-expanded={isMobileMenuOpen}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
             >
               <div className="w-5 h-4 relative flex flex-col justify-between">
                 <span className={`w-full h-0.5 bg-white rounded-full transition-all duration-300 ${
@@ -135,33 +155,59 @@ const Navbar = () => {
                   isMobileMenuOpen ? '-rotate-45 -translate-y-2' : ''
                 }`}></span>
               </div>
-            </button>
+            </motion.button>
         </div>
 
         {/* Menú Mobile mejorado */}
-        <div className={`md:hidden overflow-hidden transition-all duration-300 ${
-          isMobileMenuOpen ? 'max-h-96 opacity-100 mt-6' : 'max-h-0 opacity-0'
-        }`}>
-          <div className="bg-lumina-blue/88 backdrop-blur-xl rounded-2xl p-5 shadow-xl border border-white/30">
-            <div className="flex flex-col space-y-2">
-              {navLinks.map((link, index) => {
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div 
+              className="md:hidden overflow-hidden mt-6"
+              initial={{ maxHeight: 0, opacity: 0 }}
+              animate={{ maxHeight: 400, opacity: 1 }}
+              exit={{ maxHeight: 0, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="bg-lumina-blue/88 backdrop-blur-xl rounded-2xl p-5 shadow-xl border border-white/30">
+                <motion.div 
+                  className="flex flex-col space-y-2"
+                  initial="hidden"
+                  animate="visible"
+                  variants={{
+                    hidden: { opacity: 0 },
+                    visible: {
+                      opacity: 1,
+                      transition: {
+                        staggerChildren: 0.1,
+                      },
+                    },
+                  }}
+                >
+                  {navLinks.map((link, index) => {
                 const sectionId = link.href.substring(1);
                 return (
-                <a
+                <motion.a
                   key={link.href}
                   href={link.href}
-                    onClick={(e) => {
-                      handleNavClick(e, sectionId);
-                      closeMobileMenu();
-                    }}
-                    className={`group flex items-center justify-between px-5 py-4 rounded-xl font-Manrope font-semibold text-base transition-all duration-300 cursor-pointer ${
-                      activeSection === sectionId
-                        ? 'bg-white/20 text-white'
-                        : 'text-white/90 hover:bg-white/10 hover:text-white'
-                  }`}
-                  style={{
-                    animation: isMobileMenuOpen ? `slideIn 0.3s ease-out ${index * 0.1}s both` : 'none'
+                  onClick={(e) => {
+                    handleNavClick(e, sectionId);
+                    closeMobileMenu();
                   }}
+                  className={`group flex items-center justify-between px-5 py-4 rounded-xl font-Manrope font-semibold text-base transition-all duration-300 cursor-pointer ${
+                    activeSection === sectionId
+                      ? 'bg-white/20 text-white'
+                      : 'text-white/90 hover:bg-white/10 hover:text-white'
+                  }`}
+                  variants={{
+                    hidden: { opacity: 0, x: -20 },
+                    visible: { 
+                      opacity: 1, 
+                      x: 0,
+                      transition: { duration: 0.3, delay: index * 0.1 }
+                    },
+                  }}
+                  whileHover={{ x: 5 }}
+                  whileTap={{ scale: 0.98 }}
                 >
                     <span>{link.label}</span>
                     {activeSection === sectionId && (
@@ -175,12 +221,14 @@ const Navbar = () => {
                     >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
-                </a>
+                </motion.a>
                 );
               })}
-            </div>
-          </div>
-        </div>
+                </motion.div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Animaciones */}

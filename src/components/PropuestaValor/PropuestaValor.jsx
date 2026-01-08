@@ -7,32 +7,32 @@ const PropuestaValor = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.4,
+        staggerChildren: 0.3,
+        delayChildren: 0.5,
       },
     },
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 1,
-        ease: 'easeOut',
+        duration: 1.2,
+        ease: [0.16, 1, 0.3, 1],
       },
     },
   };
 
   const chipVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
+    hidden: { opacity: 0, scale: 0.85 },
     visible: {
       opacity: 1,
       scale: 1,
       transition: {
-        duration: 0.8,
-        ease: 'easeOut',
+        duration: 1,
+        ease: [0.16, 1, 0.3, 1],
       },
     },
   };
@@ -46,7 +46,7 @@ const PropuestaValor = () => {
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
+          viewport={{ once: true, amount: 0.5 }}
         >
           <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:gap-6 mb-1">
             <motion.h2
@@ -100,8 +100,8 @@ const PropuestaValor = () => {
           className="font-Manrope text-lg md:text-xl text-lumina-dark text-center max-w-3xl mx-auto mb-16 leading-relaxed"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 1.2, delay: 2 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 1.2, delay: 1.5 }}
         >
           En Lúmina combinamos diseño, interacción y tecnología para que cada celebración tenga un inicio inolvidable. Creemos en los detalles, en lo bien hecho y en crear experiencias que emocionen.
         </motion.p>
