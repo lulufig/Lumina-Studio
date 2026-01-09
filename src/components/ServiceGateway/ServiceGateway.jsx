@@ -4,12 +4,19 @@ import { motion } from 'framer-motion';
 
 const ServiceGateway = ({ onSelect }) => {
   const [hoveredCard, setHoveredCard] = useState(null);
-  const [isMobile, setIsMobile] = useState(false);
+  // Inicializar con detección del lado del cliente para evitar flash
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth < 768;
+    }
+    return false;
+  });
 
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
+    // Ya se inicializó arriba, pero verificamos de nuevo por si acaso
     checkMobile();
     window.addEventListener('resize', checkMobile, { passive: true });
     return () => window.removeEventListener('resize', checkMobile);
@@ -46,60 +53,85 @@ const ServiceGateway = ({ onSelect }) => {
     }
   };
 
-  // En móviles, solo fade in simple sin movimiento
-  const cardVariants = {
-    hidden: { 
-      opacity: 0,
-      ...(isMobile ? {} : { y: 30, scale: 0.95 })
-    },
-    visible: (index) => ({
-      opacity: 1,
-      ...(isMobile ? {} : { y: 0, scale: 1 }),
-      transition: {
-        duration: animationDuration,
-        delay: isMobile ? 0 : index * animationDelay,
-        ease: isMobile ? 'easeOut' : [0.16, 1, 0.3, 1],
-      },
-    }),
-  };
+  // Variantes simplificadas para móvil, completas para desktop
+  const cardVariants = isMobile
+    ? {
+        hidden: { opacity: 0 },
+        visible: () => ({ opacity: 1, transition: { duration: 0.3, ease: 'easeOut' } }),
+      }
+    : {
+        hidden: { opacity: 0, y: 30, scale: 0.95 },
+        visible: (index) => ({
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          transition: {
+            duration: animationDuration,
+            delay: index * animationDelay,
+            ease: [0.16, 1, 0.3, 1],
+          },
+        }),
+      };
 
-  const headerVariants = {
-    hidden: { opacity: 0, ...(isMobile ? {} : { y: -10 }) },
-    visible: {
-      opacity: 1,
-      ...(isMobile ? {} : { y: 0 }),
-      transition: {
-        duration: animationDuration,
-        ease: isMobile ? 'easeOut' : [0.16, 1, 0.3, 1],
-      },
-    },
-  };
+  // Header variants - siempre deben tener opacity: 1 en visible para que se muestre
+  const headerVariants = isMobile
+    ? {
+        hidden: { opacity: 0 },
+        visible: () => ({ 
+          opacity: 1, 
+          transition: { duration: 0.3, ease: 'easeOut' } 
+        }),
+      }
+    : {
+        hidden: { opacity: 0, y: -10 },
+        visible: () => ({
+          opacity: 1,
+          y: 0,
+          transition: {
+            duration: animationDuration,
+            ease: [0.16, 1, 0.3, 1],
+          },
+        }),
+      };
 
   return (
     <section id="servicios" className="bg-white py-16 md:py-24 px-6 overflow-x-hidden">
       <div className="container mx-auto max-w-6xl">
         {/* Header */}
-        <motion.div
-          className="text-center mb-12 md:mb-16"
-          initial={isMobile ? false : "hidden"}
-          whileInView={isMobile ? false : "visible"}
-          viewport={{ once: true, amount: isMobile ? 0 : 0.6 }}
-          variants={headerVariants}
-        >
-          <motion.h2 
-            className="font-InstrumentSerif text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-lumina-blue mb-4"
-            variants={isMobile ? undefined : headerVariants}
-          >
-            ¿Qué estás buscando hoy?
-          </motion.h2>
-          <motion.p 
-            className="font-Manrope text-lg md:text-xl text-lumina-dark/70 max-w-2xl mx-auto"
-            variants={isMobile ? undefined : headerVariants}
-            transition={isMobile ? undefined : { delay: 0.1 }}
-          >
-            Soluciones digitales con luz propia para cada momento.
-          </motion.p>
-        </motion.div>
+        <div className="text-center mb-12 md:mb-16">
+          {isMobile ? (
+            <>
+              <h2 className="font-InstrumentSerif text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-lumina-blue mb-4">
+                ¿Qué estás buscando hoy?
+              </h2>
+              <p className="font-Manrope text-lg md:text-xl text-lumina-dark/70 max-w-2xl mx-auto">
+                Soluciones digitales con luz propia para cada momento.
+              </p>
+            </>
+          ) : (
+            <>
+              <motion.h2 
+                className="font-InstrumentSerif text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-lumina-blue mb-4"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.6 }}
+                variants={headerVariants}
+              >
+                ¿Qué estás buscando hoy?
+              </motion.h2>
+              <motion.p 
+                className="font-Manrope text-lg md:text-xl text-lumina-dark/70 max-w-2xl mx-auto"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.6 }}
+                variants={headerVariants}
+                transition={{ delay: 0.1 }}
+              >
+                Soluciones digitales con luz propia para cada momento.
+              </motion.p>
+            </>
+          )}
+        </div>
 
         {/* Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
@@ -110,11 +142,11 @@ const ServiceGateway = ({ onSelect }) => {
               <motion.div
                 key={category.id}
                 custom={index}
-                variants={isMobile ? undefined : cardVariants}
-                initial={isMobile ? false : "hidden"}
-                whileInView={isMobile ? false : "visible"}
-                viewport={{ once: true, amount: isMobile ? 0 : 0.2 }}
-                whileHover={isMobile ? {} : { 
+                variants={cardVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: isMobile ? 0.1 : 0.2 }}
+                whileHover={isMobile ? undefined : { 
                   scale: 1.02,
                   transition: { duration: 0.2 }
                 }}
