@@ -1,9 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
 
 const FAQ = () => {
   const [openIndex, setOpenIndex] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile, { passive: true });
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const faqs = [
     {
@@ -61,10 +71,10 @@ const FAQ = () => {
           </motion.h2>
           <motion.p 
             className="font-Manrope text-base md:text-lg text-gray-600"
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 1, delay: 0.4 }}
+            transition={{ duration: isMobile ? 0.6 : 1, delay: isMobile ? 0.2 : 0.4 }}
           >
             Despejamos tus dudas antes de empezar.
           </motion.p>
@@ -76,17 +86,17 @@ const FAQ = () => {
             <motion.div
               key={index}
               className="border-b border-gray-200 overflow-hidden"
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.4 }}
-              transition={{ duration: 0.8, delay: index * 0.15 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: isMobile ? 0.5 : 0.8, delay: index * (isMobile ? 0.1 : 0.15) }}
             >
               <motion.button
                 className="w-full text-left font-Manrope font-medium text-gray-800 text-base md:text-lg py-4 md:py-5 flex items-center justify-between gap-4 hover:text-gray-900 transition-colors"
                 onClick={() => toggleQuestion(index)}
                 aria-expanded={openIndex === index}
                 aria-controls={`faq-answer-${index}`}
-                whileHover={{ x: 5 }}
+                whileHover={isMobile ? {} : { x: 5 }}
                 transition={{ duration: 0.2 }}
               >
                 <span className="pr-8">{faq.question}</span>

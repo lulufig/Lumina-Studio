@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import Navbar from './components/Navbar/Navbar';
 import Hero from './components/Hero/Hero';
 import PropuestaValor from './components/PropuestaValor/PropuestaValor';
@@ -6,7 +6,9 @@ import ServiceGateway from './components/ServiceGateway/ServiceGateway';
 import SolutionsContainer from './components/SolutionsContainer/SolutionsContainer';
 import FAQ from './components/FAQ/FAQ';
 import Footer from './components/Footer/Footer';
-import EventForm from './components/EventForm/EventForm';
+
+// Solo lazy load EventForm ya que no es crítico
+const EventForm = lazy(() => import('./components/EventForm/EventForm'));
 
 function App() {
   const [isEventFormOpen, setIsEventFormOpen] = useState(false);
@@ -35,11 +37,15 @@ function App() {
       <FAQ />
       <Footer />
       
-      {/* Formulario de Evento */}
-      <EventForm 
-        isOpen={isEventFormOpen} 
-        onClose={() => setIsEventFormOpen(false)} 
-      />
+      {/* Formulario de Evento - solo carga cuando se abre */}
+      {isEventFormOpen && (
+        <Suspense fallback={null}>
+          <EventForm 
+            isOpen={isEventFormOpen} 
+            onClose={() => setIsEventFormOpen(false)} 
+          />
+        </Suspense>
+      )}
     </div>
   );
 }

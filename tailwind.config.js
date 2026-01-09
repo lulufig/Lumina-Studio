@@ -18,6 +18,8 @@ export default {
       },
       fontFamily: {
         'serif': ['"Instrument Serif"', 'serif'],
+        'InstrumentSerif': ['"Instrument Serif"', 'serif'],
+        'Manrope': ['"Manrope"', 'sans-serif'],
         'sans': ['"Manrope"', 'sans-serif'],
       },
     },

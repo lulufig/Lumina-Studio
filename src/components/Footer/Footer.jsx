@@ -1,24 +1,36 @@
 import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 
 const Footer = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile, { passive: true });
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
+        staggerChildren: isMobile ? 0.1 : 0.2,
+        delayChildren: isMobile ? 0.1 : 0.3,
       },
     },
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 20 }, // Reducir movimiento
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.8,
+        duration: isMobile ? 0.5 : 0.8,
         ease: [0.16, 1, 0.3, 1],
       },
     },
@@ -29,7 +41,7 @@ const Footer = () => {
       className="bg-lumina-orange text-white py-4 md:py-5 px-4 sm:px-6 overflow-x-hidden"
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 0.5 }}
+      viewport={{ once: true, amount: 0.2 }}
       variants={containerVariants}
     >
       <div className="container mx-auto max-w-7xl">
@@ -39,7 +51,7 @@ const Footer = () => {
             href="#hero" 
             className="flex items-center group cursor-pointer md:ml-4"
             variants={itemVariants}
-            whileHover={{ scale: 1.1 }}
+            whileHover={isMobile ? {} : { scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
           >
             <div className="relative">
@@ -50,6 +62,8 @@ const Footer = () => {
                 width="52"
                 height="48"
                 loading="lazy"
+                decoding="async"
+                fetchPriority="low"
               />
               {/* Efecto de resplandor */}
               <div className="absolute inset-0 bg-white/20 rounded-lg blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -75,7 +89,7 @@ const Footer = () => {
               rel="noopener noreferrer"
               className="group w-12 h-12 rounded-full bg-white/10 hover:bg-white flex items-center justify-center transition-all duration-300 hover:shadow-lg" 
               aria-label="Instagram"
-              whileHover={{ scale: 1.1, rotate: 5 }}
+              whileHover={isMobile ? {} : { scale: 1.1, rotate: 5 }}
               whileTap={{ scale: 0.95 }}
             >
               <svg className="w-6 h-6 text-white group-hover:text-lumina-orange transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24">
@@ -89,7 +103,7 @@ const Footer = () => {
               rel="noopener noreferrer"
               className="group w-12 h-12 rounded-full bg-white/10 hover:bg-white flex items-center justify-center transition-all duration-300 hover:shadow-lg" 
               aria-label="Facebook"
-              whileHover={{ scale: 1.1, rotate: -5 }}
+              whileHover={isMobile ? {} : { scale: 1.1, rotate: -5 }}
               whileTap={{ scale: 0.95 }}
             >
               <svg className="w-6 h-6 text-white group-hover:text-lumina-orange transition-colors duration-300" fill="currentColor" viewBox="0 0 24 24">

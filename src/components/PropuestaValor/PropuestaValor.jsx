@@ -1,37 +1,49 @@
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 
 const PropuestaValor = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile, { passive: true });
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.3,
-        delayChildren: 0.5,
+        staggerChildren: isMobile ? 0.15 : 0.3,
+        delayChildren: isMobile ? 0.2 : 0.5,
       },
     },
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 20 }, // Reducir movimiento
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 1.2,
+        duration: isMobile ? 0.8 : 1.2,
         ease: [0.16, 1, 0.3, 1],
       },
     },
   };
 
   const chipVariants = {
-    hidden: { opacity: 0, scale: 0.85 },
+    hidden: { opacity: 0, scale: 0.9 }, // Menos escala
     visible: {
       opacity: 1,
       scale: 1,
       transition: {
-        duration: 1,
+        duration: isMobile ? 0.6 : 1,
         ease: [0.16, 1, 0.3, 1],
       },
     },
@@ -112,14 +124,15 @@ const PropuestaValor = () => {
             onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
             className="w-12 h-12 rounded-full bg-lumina-orange flex items-center justify-center hover:bg-[#E63E0F] transition-colors duration-300 hover:scale-110 shadow-lg hover:shadow-xl cursor-pointer"
             aria-label="Scroll down"
-            animate={{
-              y: [0, 10, 0],
+            animate={isMobile ? {} : {
+              y: [0, 8, 0], // Reducir movimiento
             }}
-            transition={{
-              duration: 2.5,
+            transition={isMobile ? {} : {
+              duration: 3, // Más lento
               repeat: Infinity,
               ease: 'easeInOut',
             }}
+            style={{ willChange: isMobile ? 'auto' : 'transform' }}
           >
             <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />

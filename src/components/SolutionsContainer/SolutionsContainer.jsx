@@ -1,10 +1,24 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
 import { openWhatsApp } from '../../utils/scrollUtils';
 
 const SolutionsContainer = ({ activeTab = 'celebrations', setActiveTab }) => {
   const [hoveredCard, setHoveredCard] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile, { passive: true });
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Reducir duraciones en móviles
+  const animationDuration = isMobile ? 0.5 : 1;
+  const animationDelay = isMobile ? 0.15 : 0.3;
   
   // Use internal state only if props are not provided (backward compatibility)
   const [internalTab, setInternalTab] = useState('celebrations');
@@ -22,25 +36,25 @@ const SolutionsContainer = ({ activeTab = 'celebrations', setActiveTab }) => {
       {
         id: 'flash',
         title: 'Invitación Flash',
-        description: 'Práctico y estético. Datos claves de forma directa.',
-        whyUs: 'Rápido no significa feo. Diseño superior a plantillas.',
+        description: 'La opción inteligente. Resolvé tu invitación rápido sin sacrificar estética.',
+        whyUs: 'Ideal si tenés poco tiempo. Te entregamos una web moderna, ágil y con toda la info clave en 3 a 5 días.',
         hoverColor: 'hover:border-lumina-orange',
         cta: 'Consultar Pack Flash',
         whatsappMessage: 'Hola Lúmina! Me interesa el Pack Flash para mi evento.',
-        features: ['Entrega 3-5 días', 'Diseño personalizado', 'Link único'],
+        features: ['Mapa GPS Inteligente', 'Cuenta Regresiva', 'RSVP directo a WhatsApp'],
         featured: false,
       },
       {
         id: 'experience',
         title: 'Experiencia Lúmina',
-        description: 'Narrativa visual inmersiva con animaciones.',
-        whyUs: 'Diseño sin límites. Emoción desde el primer clic.',
+        description: 'El tráiler de tu fiesta. Una web inmersiva que cuenta tu historia y emociona.',
+        whyUs: 'Diseño de autor sin límites. Animaciones cinematográficas, música y efectos visuales para eventos que buscan destacar.',
         hoverColor: 'hover:border-lumina-lilac',
-        cta: 'Diseñar Experiencia',
+        cta: 'Diseñar mi Experiencia',
         whatsappMessage: 'Hola chicas! Quiero algo único para mi evento, me interesa el Pack Experience.',
-        features: ['Animaciones avanzadas', 'Interactivo', 'Música'],
+        features: ['Diseño 100% a medida', 'Historia animada (Storytelling)', 'Sección Regalos/CBU'],
         featured: true,
-        badge: 'Más elegido',
+        badge: 'Más vendido',
       },
     ],
   };
@@ -54,24 +68,24 @@ const SolutionsContainer = ({ activeTab = 'celebrations', setActiveTab }) => {
     cards: [
       {
         id: 'menu',
-        title: 'Menú Interactivo',
-        description: 'Estilo App. Olvidate del PDF incómodo.',
-        whyUs: 'Actualizá precios desde Google Sheets.',
+        title: 'Catálogo Interactivo',
+        description: 'Tu tienda express. Mostrá tus productos y vendé directo por WhatsApp.',
+        whyUs: 'La potencia de una Tienda Online, sin comisiones. Autogestión total: cambiá precios y stock en segundos desde Google Sheets.',
         hoverColor: 'hover:border-lumina-green',
-        cta: 'Cotizar Menú',
-        whatsappMessage: 'Hola! Tengo un local gastronómico y quiero info sobre el Menú Digital.',
-        features: ['Actualización fácil', 'Sin impresión', 'Acceso QR'],
+        cta: 'Cotizar Catálogo',
+        whatsappMessage: 'Hola! Me interesa el Catálogo Interactivo para mi negocio.',
+        features: ['Ideal Ropa, Deco o Comida', 'Pedidos directos a WhatsApp', 'QR listo para imprimir'],
         featured: false,
       },
       {
         id: 'landing',
-        title: 'Landing Page',
-        description: 'Tu tarjeta de presentación 24/7.',
-        whyUs: 'Estructura de ventas + Diseño Premium.',
+        title: 'Landing Comercial',
+        description: 'Tu tarjeta de presentación 24/7. Estrategia y diseño para vender tus servicios.',
+        whyUs: 'No solo diseñamos lindo, diseñamos para convertir. Estructura de ventas pensada para transformar visitas en clientes.',
         hoverColor: 'hover:border-lumina-yellow',
-        cta: 'Cotizar Web',
-        whatsappMessage: 'Hola Lúmina! Soy profesional y quiero una Landing Page.',
-        features: ['SEO optimizado', 'Responsive', 'Formularios'],
+        cta: 'Cotizar Web Negocio',
+        whatsappMessage: 'Hola Lúmina! Me interesa una Landing Comercial para mi negocio.',
+        features: ['Diseño One-Page Estratégico', 'Botones de Llamada/WhatsApp', 'Enlaces a Redes Sociales'],
         featured: false,
       },
     ],
@@ -82,16 +96,16 @@ const SolutionsContainer = ({ activeTab = 'celebrations', setActiveTab }) => {
   const cardVariants = {
     hidden: { 
       opacity: 0, 
-      y: 50,
-      scale: 0.9
+      y: 30, // Reducir movimiento
+      scale: 0.95
     },
     visible: (index) => ({
       opacity: 1,
       y: 0,
       scale: 1,
       transition: {
-        duration: 1,
-        delay: index * 0.3,
+        duration: animationDuration,
+        delay: index * animationDelay,
         ease: [0.16, 1, 0.3, 1],
       },
     }),
@@ -110,13 +124,13 @@ const SolutionsContainer = ({ activeTab = 'celebrations', setActiveTab }) => {
   };
 
   const mockupVariants = {
-    hidden: { opacity: 0, x: -60 },
+    hidden: { opacity: 0, x: -30 }, // Reducir movimiento
     visible: {
       opacity: 1,
       x: 0,
       transition: {
-        duration: 1.2,
-        delay: 0.3,
+        duration: animationDuration,
+        delay: 0.2,
         ease: [0.16, 1, 0.3, 1],
       },
     },
@@ -192,22 +206,24 @@ const SolutionsContainer = ({ activeTab = 'celebrations', setActiveTab }) => {
             <motion.div
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, amount: 0.5 }}
+              viewport={{ once: true, amount: 0.3 }}
               variants={mockupVariants}
               className="flex items-center justify-center mb-12 lg:mb-0"
+              style={{ willChange: 'transform' }} // Aceleración GPU
             >
               <div className="relative w-full max-w-[280px] md:max-w-[320px]">
                 {/* 3D iPhone Frame */}
                 <motion.div
                   className="relative"
-                  animate={{
-                    y: [0, -10, 0],
+                  animate={isMobile ? {} : {
+                    y: [0, -8, 0], // Reducir movimiento
                   }}
-                  transition={{
-                    duration: 4,
+                  transition={isMobile ? {} : {
+                    duration: 5, // Más lento
                     repeat: Infinity,
                     ease: 'easeInOut',
                   }}
+                  style={{ willChange: isMobile ? 'auto' : 'transform' }}
                 >
                   {/* Phone Frame Outer Shadow */}
                   <div className="absolute inset-0 bg-black/20 rounded-[3rem] blur-2xl transform scale-95"></div>
@@ -236,6 +252,9 @@ const SolutionsContainer = ({ activeTab = 'celebrations', setActiveTab }) => {
                                   src={`${import.meta.env.BASE_URL}boda-invitacion.png`}
                                   alt="Invitación digital de boda"
                                   className="w-full h-full object-cover object-top"
+                                  loading="lazy"
+                                  decoding="async"
+                                  fetchPriority="low"
                                   onError={(e) => {
                                     e.target.style.display = 'none';
                                     e.target.nextElementSibling.style.display = 'flex';
@@ -272,8 +291,11 @@ const SolutionsContainer = ({ activeTab = 'celebrations', setActiveTab }) => {
                               <div className="h-full w-full relative overflow-hidden bg-white">
                                 <img
                                   src={`${import.meta.env.BASE_URL}menu-qr.png`}
-                                  alt="Menú digital interactivo"
+                                  alt="Catálogo interactivo"
                                   className="w-full h-full object-cover object-top"
+                                  loading="lazy"
+                                  decoding="async"
+                                  fetchPriority="low"
                                   onError={(e) => {
                                     e.target.style.display = 'none';
                                     e.target.nextElementSibling.style.display = 'flex';
@@ -281,7 +303,7 @@ const SolutionsContainer = ({ activeTab = 'celebrations', setActiveTab }) => {
                                 />
                                 <div className="absolute inset-0 bg-linear-to-br from-lumina-blue via-lumina-green to-lumina-lilac flex flex-col items-center justify-center p-8 text-white" style={{ display: 'none' }}>
                                   <h3 className="font-InstrumentSerif text-xl font-bold mb-2 text-center">
-                                    Menú Digital
+                                    Catálogo Interactivo
                                   </h3>
                                   <p className="font-Manrope text-xs opacity-90 text-center">
                                     Tu negocio online
@@ -321,14 +343,14 @@ const SolutionsContainer = ({ activeTab = 'celebrations', setActiveTab }) => {
               className="flex flex-col gap-4"
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, amount: 0.4 }}
+              viewport={{ once: true, amount: 0.2 }}
               variants={{
                 hidden: { opacity: 0 },
                 visible: {
                   opacity: 1,
                   transition: {
-                    staggerChildren: 0.3,
-                    delayChildren: 0.5,
+                    staggerChildren: animationDelay,
+                    delayChildren: 0.3,
                   },
                 },
               }}
@@ -355,9 +377,9 @@ const SolutionsContainer = ({ activeTab = 'celebrations', setActiveTab }) => {
                   key={card.id}
                   custom={index}
                   variants={cardVariants}
-                  whileHover={{ 
+                  whileHover={isMobile ? {} : { 
                     scale: 1.01,
-                    transition: { duration: 0.3 }
+                    transition: { duration: 0.2 } // Más rápido
                   }}
                   onMouseEnter={() => setHoveredCard(card.id)}
                   onMouseLeave={() => setHoveredCard(null)}

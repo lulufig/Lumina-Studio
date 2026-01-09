@@ -1,27 +1,39 @@
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
-import Background3DEffects from './Background3DEffects';
+import { useState, useEffect } from 'react';
 import { openWhatsApp } from '../../utils/scrollUtils';
+import Background3DEffects from './Background3DEffects';
 
 const Hero = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile, { passive: true });
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.3,
-        delayChildren: 0.3,
+        staggerChildren: isMobile ? 0.15 : 0.3,
+        delayChildren: isMobile ? 0.1 : 0.3,
       },
     },
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 40 },
+    hidden: { opacity: 0, y: 30 }, // Reducir movimiento
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 1.2,
+        duration: isMobile ? 0.8 : 1.2,
         ease: [0.16, 1, 0.3, 1],
       },
     },
@@ -35,8 +47,8 @@ const Hero = () => {
       animate="visible"
       variants={containerVariants}
     >
-      {/* Efectos 3D de fondo */}
-      <Background3DEffects />
+      {/* Efectos 3D de fondo - solo en desktop */}
+      {!isMobile && <Background3DEffects />}
       
       {/* Gradiente animado de fondo */}
       <div className="absolute inset-0 bg-linear-to-br from-lumina-blue via-lumina-blue/95 to-lumina-blue/90 animate-gradient-shift"></div>
@@ -57,29 +69,40 @@ const Hero = () => {
         ))}
       </div>
 
-     {/* GIFs decorativos */}
+      {/* GIFs decorativos - Lazy load ya que son decorativos */}
       {/* Asterisco naranja - lado izquierdo del título */}
       <div
         className="absolute top-[22%] left-[12%] w-[140px] h-[140px] xs:top-[13%] xs:left-[50%] xs:w-32 xs:h-32 sm:top-[20%] sm:left-[20%] sm:w-[140px] sm:h-[140px] animate-float z-10"
+        style={{ willChange: 'transform' }}
       >
         <img
           src={`${import.meta.env.BASE_URL}asterisco-naranja.gif`}
-          alt="Asterisco decorativo"
+          alt=""
+          aria-hidden="true"
           className="w-full h-full drop-shadow-glow-orange"
-          loading="eager"
+          loading="lazy"
+          decoding="async"
+          fetchPriority="low"
+          width="140"
+          height="140"
         />
       </div>
 
       {/* Semicírculos amarillos - lado derecho más abajo */}
       <div 
         className="absolute top-[72%] right-[12%] w-[140px] h-[140px] xs:top-[70%] xs:right-[20%] xs:w-32 xs:h-32 sm:top-[72%] sm:right-[20%] sm:w-[140px] sm:h-[140px] animate-float z-10"
-        style={{ animationDelay: '1s' }}
+        style={{ animationDelay: '1s', willChange: 'transform' }}
       >
         <img 
           src={`${import.meta.env.BASE_URL}semicirculos-amarillos.gif`}
-          alt="Semicírculos decorativos"
+          alt=""
+          aria-hidden="true"
           className="w-full h-full drop-shadow-glow-yellow"
-          loading="eager"
+          loading="lazy"
+          decoding="async"
+          fetchPriority="low"
+          width="140"
+          height="140"
         />
       </div>
 

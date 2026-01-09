@@ -1,9 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 
 const ServiceGateway = ({ onSelect }) => {
   const [hoveredCard, setHoveredCard] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile, { passive: true });
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Reducir duraciones en móviles
+  const animationDuration = isMobile ? 0.6 : 1;
+  const animationDelay = isMobile ? 0.2 : 0.4;
 
   const categories = [
     {
@@ -18,7 +32,7 @@ const ServiceGateway = ({ onSelect }) => {
     {
       id: 'business',
       title: 'Para tu Negocio',
-      description: 'Herramientas para vender más. Menús digitales QR para gastronomía y Landing Pages estratégicas para profesionales.',
+      description: 'Herramientas para vender más. Menús digitales QR para tu emprendimiento y Landing Pages estratégicas para profesionales.',
       buttonText: 'Ver Soluciones',
       borderColor: 'border-lumina-green',
       textColor: 'text-lumina-green',
@@ -35,28 +49,28 @@ const ServiceGateway = ({ onSelect }) => {
   const cardVariants = {
     hidden: { 
       opacity: 0, 
-      y: 60,
-      scale: 0.9
+      y: 40, // Reducir movimiento
+      scale: 0.95
     },
     visible: (index) => ({
       opacity: 1,
       y: 0,
       scale: 1,
       transition: {
-        duration: 1,
-        delay: index * 0.4,
+        duration: animationDuration,
+        delay: index * animationDelay,
         ease: [0.16, 1, 0.3, 1],
       },
     }),
   };
 
   const headerVariants = {
-    hidden: { opacity: 0, y: -40 },
+    hidden: { opacity: 0, y: -20 }, // Reducir movimiento
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 1,
+        duration: animationDuration,
         ease: [0.16, 1, 0.3, 1],
       },
     },
@@ -100,10 +114,10 @@ const ServiceGateway = ({ onSelect }) => {
                 variants={cardVariants}
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true, amount: 0.4 }}
-                whileHover={{ 
+                viewport={{ once: true, amount: 0.2 }} // Reducir threshold
+                whileHover={isMobile ? {} : { 
                   scale: 1.02,
-                  transition: { duration: 0.3 }
+                  transition: { duration: 0.2 } // Más rápido
                 }}
                 onMouseEnter={() => setHoveredCard(category.id)}
                 onMouseLeave={() => setHoveredCard(null)}
@@ -117,11 +131,14 @@ const ServiceGateway = ({ onSelect }) => {
                   }
                   group
                 `}
-                style={isHovered ? {
-                  boxShadow: category.id === 'celebrations' 
-                    ? '0 20px 40px -10px rgba(248, 73, 26, 0.4)' 
-                    : '0 20px 40px -10px rgba(55, 166, 74, 0.4)'
-                } : {}}
+                style={{
+                  willChange: 'transform',
+                  ...(isHovered ? {
+                    boxShadow: category.id === 'celebrations' 
+                      ? '0 20px 40px -10px rgba(248, 73, 26, 0.4)' 
+                      : '0 20px 40px -10px rgba(55, 166, 74, 0.4)'
+                  } : {})
+                }}
               >
                 {/* Content */}
                 <div className="px-6 pt-6 pb-6 md:px-8 md:pt-8 md:pb-6 flex flex-col h-full">

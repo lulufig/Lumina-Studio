@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
 import { handleNavClick } from '../../utils/scrollUtils';
@@ -8,54 +8,57 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('nosotras');
 
-  // Detectar scroll
+  // Throttle function para optimizar scroll
+  const throttle = useCallback((func, limit) => {
+    let inThrottle;
+    return function(...args) {
+      if (!inThrottle) {
+        func.apply(this, args);
+        inThrottle = true;
+        setTimeout(() => inThrottle = false, limit);
+      }
+    };
+  }, []);
+
+  // Detectar scroll con throttling
   useEffect(() => {
-    const handleScroll = () => {
+    const handleScroll = throttle(() => {
       const scrollY = window.scrollY;
       
-      // Detectar si estamos en la sección Hero
-      // El Hero es la primera sección con bg-lumina-blue y min-h-screen
       const heroSection = document.querySelector('section.bg-lumina-blue');
       let isInHero = false;
       
       if (heroSection) {
         const heroRect = heroSection.getBoundingClientRect();
-        // Estamos en Hero si el scroll está dentro de los límites del Hero
-        // Consideramos que estamos en Hero si estamos en los primeros 90% de la altura del Hero
         isInHero = scrollY < heroRect.height * 0.9;
-      } else {
-        // Si no encontramos el Hero, asumimos que NO estamos en Hero
-        isInHero = false;
       }
       
-      // El navbar debe tener fondo azul cuando:
-      // - Ya NO estamos en la sección Hero (scrollY >= altura del Hero)
-      // - O cuando hacemos scroll significativo dentro del Hero (scrollY > 100px)
       setIsScrolled(!isInHero || scrollY > 100);
       
-      // Detectar sección activa
-      const sections = ['hero', 'nosotras', 'servicios', 'soluciones', 'faq'];
-      const current = sections.find(section => {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          return rect.top <= 150 && rect.bottom >= 100;
-        }
-        return false;
+      // Detectar sección activa con requestAnimationFrame para mejor performance
+      requestAnimationFrame(() => {
+        const sections = ['hero', 'nosotras', 'servicios', 'soluciones', 'faq'];
+        const current = sections.find(section => {
+          const element = document.getElementById(section);
+          if (element) {
+            const rect = element.getBoundingClientRect();
+            return rect.top <= 150 && rect.bottom >= 100;
+          }
+          return false;
+        });
+        if (current) setActiveSection(current);
       });
-      if (current) setActiveSection(current);
-    };
+    }, 100); // Throttle a 100ms
 
-    // Ejecutar al cargar para verificar posición inicial
     handleScroll();
 
-    window.addEventListener('scroll', handleScroll);
-    window.addEventListener('resize', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll, { passive: true });
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleScroll);
     };
-  }, []);
+  }, [throttle]);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -95,7 +98,9 @@ const Navbar = () => {
                 className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
                 width="96"
                 height="96"
-                loading="lazy"
+                loading="eager"
+                fetchPriority="high"
+                decoding="sync"
               />
             </div>
           </motion.a>

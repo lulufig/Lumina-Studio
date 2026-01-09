@@ -70,3 +70,28 @@
 .animate-glow {
   animation: glow 3s ease-in-out infinite;
 }
+
+/* Optimizaciones de scroll para móviles */
+* {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Aceleración GPU para elementos animados */
+[data-animated] {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Desactivar animaciones si el usuario prefiere movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
