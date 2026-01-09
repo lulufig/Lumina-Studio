@@ -12,11 +12,30 @@ export const openWhatsApp = (e, customMessage) => {
     e.preventDefault();
   }
   
+  // Detectar si es móvil
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  
   // Usar mensaje personalizado o el predefinido
   const message = customMessage || WHATSAPP_MESSAGE;
   const encodedMessage = encodeURIComponent(message);
   const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
-  window.open(whatsappUrl, '_blank');
+  
+  // Guardar timestamp antes de abrir WhatsApp para detectar si la página necesita recarga
+  sessionStorage.setItem('whatsappClickTime', Date.now().toString());
+  
+  // En móviles, usar location.href para mejor compatibilidad
+  // En desktop, usar window.open
+  if (isMobile) {
+    // Guardar scroll position para restaurarla al volver
+    sessionStorage.setItem('scrollPosition', window.scrollY.toString());
+    window.location.href = whatsappUrl;
+  } else {
+    const whatsappWindow = window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+    // Si no se pudo abrir (bloqueador de popups), usar location.href como fallback
+    if (!whatsappWindow || whatsappWindow.closed || typeof whatsappWindow.closed === 'undefined') {
+      window.location.href = whatsappUrl;
+    }
+  }
 };
 
 // Función para hacer scroll suave a una sección

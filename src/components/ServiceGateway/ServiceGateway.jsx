@@ -15,9 +15,9 @@ const ServiceGateway = ({ onSelect }) => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Reducir duraciones en móviles
-  const animationDuration = isMobile ? 0.6 : 1;
-  const animationDelay = isMobile ? 0.2 : 0.4;
+  // Desactivar animaciones complejas en móviles
+  const animationDuration = isMobile ? 0.3 : 1;
+  const animationDelay = isMobile ? 0.1 : 0.4;
 
   const categories = [
     {
@@ -46,32 +46,31 @@ const ServiceGateway = ({ onSelect }) => {
     }
   };
 
+  // En móviles, solo fade in simple sin movimiento
   const cardVariants = {
     hidden: { 
-      opacity: 0, 
-      y: 40, // Reducir movimiento
-      scale: 0.95
+      opacity: 0,
+      ...(isMobile ? {} : { y: 30, scale: 0.95 })
     },
     visible: (index) => ({
       opacity: 1,
-      y: 0,
-      scale: 1,
+      ...(isMobile ? {} : { y: 0, scale: 1 }),
       transition: {
         duration: animationDuration,
-        delay: index * animationDelay,
-        ease: [0.16, 1, 0.3, 1],
+        delay: isMobile ? 0 : index * animationDelay,
+        ease: isMobile ? 'easeOut' : [0.16, 1, 0.3, 1],
       },
     }),
   };
 
   const headerVariants = {
-    hidden: { opacity: 0, y: -20 }, // Reducir movimiento
+    hidden: { opacity: 0, ...(isMobile ? {} : { y: -10 }) },
     visible: {
       opacity: 1,
-      y: 0,
+      ...(isMobile ? {} : { y: 0 }),
       transition: {
         duration: animationDuration,
-        ease: [0.16, 1, 0.3, 1],
+        ease: isMobile ? 'easeOut' : [0.16, 1, 0.3, 1],
       },
     },
   };
@@ -82,21 +81,21 @@ const ServiceGateway = ({ onSelect }) => {
         {/* Header */}
         <motion.div
           className="text-center mb-12 md:mb-16"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.6 }}
+          initial={isMobile ? false : "hidden"}
+          whileInView={isMobile ? false : "visible"}
+          viewport={{ once: true, amount: isMobile ? 0 : 0.6 }}
           variants={headerVariants}
         >
           <motion.h2 
             className="font-InstrumentSerif text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-lumina-blue mb-4"
-            variants={headerVariants}
+            variants={isMobile ? undefined : headerVariants}
           >
             ¿Qué estás buscando hoy?
           </motion.h2>
           <motion.p 
             className="font-Manrope text-lg md:text-xl text-lumina-dark/70 max-w-2xl mx-auto"
-            variants={headerVariants}
-            transition={{ delay: 0.1 }}
+            variants={isMobile ? undefined : headerVariants}
+            transition={isMobile ? undefined : { delay: 0.1 }}
           >
             Soluciones digitales con luz propia para cada momento.
           </motion.p>
@@ -111,29 +110,29 @@ const ServiceGateway = ({ onSelect }) => {
               <motion.div
                 key={category.id}
                 custom={index}
-                variants={cardVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.2 }} // Reducir threshold
+                variants={isMobile ? undefined : cardVariants}
+                initial={isMobile ? false : "hidden"}
+                whileInView={isMobile ? false : "visible"}
+                viewport={{ once: true, amount: isMobile ? 0 : 0.2 }}
                 whileHover={isMobile ? {} : { 
                   scale: 1.02,
-                  transition: { duration: 0.2 } // Más rápido
+                  transition: { duration: 0.2 }
                 }}
-                onMouseEnter={() => setHoveredCard(category.id)}
-                onMouseLeave={() => setHoveredCard(null)}
+                onMouseEnter={() => !isMobile && setHoveredCard(category.id)}
+                onMouseLeave={() => !isMobile && setHoveredCard(null)}
                 onClick={() => handleCardClick(category.id)}
                 className={`
                   relative bg-white rounded-2xl shadow-lg cursor-pointer
-                  border transition-all duration-500
-                  ${isHovered 
+                  border transition-all duration-300
+                  ${isHovered && !isMobile
                     ? `${category.borderColor} shadow-2xl` 
                     : 'border-gray-200'
                   }
                   group
                 `}
                 style={{
-                  willChange: 'transform',
-                  ...(isHovered ? {
+                  ...(isMobile ? {} : { willChange: 'transform' }),
+                  ...(isHovered && !isMobile ? {
                     boxShadow: category.id === 'celebrations' 
                       ? '0 20px 40px -10px rgba(248, 73, 26, 0.4)' 
                       : '0 20px 40px -10px rgba(55, 166, 74, 0.4)'
@@ -181,10 +180,10 @@ const ServiceGateway = ({ onSelect }) => {
                         strokeWidth={2}
                         viewBox="0 0 24 24"
                         stroke="currentColor"
-                        animate={{
+                        animate={isMobile ? {} : {
                           x: isHovered ? 5 : 0,
                         }}
-                        transition={{
+                        transition={isMobile ? {} : {
                           duration: 0.3,
                         }}
                       >
