@@ -23,8 +23,11 @@ export default defineConfig({
         manualChunks: (id) => {
           // Separar vendor chunks más agresivamente
           if (id.includes('node_modules')) {
-            // React core
-            if (id.includes('react') || id.includes('react-dom')) {
+            // React core (primero para evitar circular dependency)
+            if (id.includes('react') && !id.includes('react-dom')) {
+              return 'react-vendor';
+            }
+            if (id.includes('react-dom')) {
               return 'react-vendor';
             }
             // Framer Motion (pesado, separar)
@@ -43,14 +46,16 @@ export default defineConfig({
             if (id.includes('lucide-react') || id.includes('react-icons')) {
               return 'icons-vendor';
             }
-            // Otros vendors
-            return 'vendor';
           }
+          // No crear chunk 'vendor' por defecto para evitar circular dependency
         },
         // Optimizar nombres de chunks
         chunkFileNames: 'assets/js/[name]-[hash].js',
         entryFileNames: 'assets/js/[name]-[hash].js',
         assetFileNames: (assetInfo) => {
+          if (!assetInfo.name) {
+            return 'assets/[name]-[hash][extname]';
+          }
           const info = assetInfo.name.split('.');
           const ext = info[info.length - 1];
           if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(ext)) {
