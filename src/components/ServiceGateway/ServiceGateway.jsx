@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+// eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 
 const ServiceGateway = ({ onSelect }) => {
@@ -53,7 +54,18 @@ const ServiceGateway = ({ onSelect }) => {
 
   // Animaciones optimizadas: suaves para móvil, completas para desktop
   const cardVariants = isMobile
-    ? null
+    ? {
+        hidden: { opacity: 0, y: 20 },
+        visible: (index) => ({
+          opacity: 1,
+          y: 0,
+          transition: {
+            duration: 0.4,
+            delay: index * 0.1,
+            ease: 'easeOut',
+          },
+        }),
+      }
     : {
         hidden: { opacity: 0, y: 40, scale: 0.95 },
         visible: (index) => ({
@@ -139,23 +151,23 @@ const ServiceGateway = ({ onSelect }) => {
           {categories.map((category, index) => {
             const isHovered = hoveredCard === category.id;
 
-            const CardWrapper = isMobile ? 'div' : motion.div;
-            const cardProps = isMobile ? {} : {
+            const cardProps = {
               custom: index,
               variants: cardVariants,
               initial: "hidden",
-              whileInView: "visible",
-              viewport: { once: true, margin: "-10%" },
-              whileHover: { 
+              animate: isMobile ? "visible" : undefined,
+              whileInView: isMobile ? undefined : "visible",
+              viewport: isMobile ? undefined : { once: true, margin: "-10%" },
+              whileHover: isMobile ? undefined : { 
                 scale: 1.02,
                 transition: { duration: 0.3, ease: 'easeOut' }
               },
-              onMouseEnter: () => setHoveredCard(category.id),
-              onMouseLeave: () => setHoveredCard(null),
+              onMouseEnter: () => !isMobile && setHoveredCard(category.id),
+              onMouseLeave: () => !isMobile && setHoveredCard(null),
             };
 
             return (
-              <CardWrapper
+              <motion.div
                 key={category.id}
                 {...cardProps}
                 onClick={() => handleCardClick(category.id)}
@@ -309,7 +321,7 @@ const ServiceGateway = ({ onSelect }) => {
                     </motion.div>
                   )}
                 </div>
-              </CardWrapper>
+              </motion.div>
             );
           })}
         </div>
