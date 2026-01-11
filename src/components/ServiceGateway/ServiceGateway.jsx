@@ -122,14 +122,23 @@ const ServiceGateway = ({ onSelect }) => {
               <motion.div
                 key={category.id}
                 custom={index}
-                variants={cardVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ 
+                variants={isMobile ? undefined : cardVariants}
+                initial={isMobile ? { opacity: 1, y: 15 } : "hidden"}
+                whileInView={isMobile ? undefined : "visible"}
+                viewport={isMobile ? undefined : { 
                   once: true, 
                   amount: 0.3,
-                  margin: "-100px" // Activar antes para evitar parpadeo
+                  margin: "-100px"
                 }}
+                animate={isMobile ? {
+                  opacity: 1,
+                  y: 0,
+                  transition: {
+                    duration: 0.4,
+                    delay: index * 0.1,
+                    ease: 'easeOut'
+                  }
+                } : undefined}
                 whileHover={isMobile ? undefined : { 
                   scale: 1.02,
                   transition: { duration: 0.3, ease: 'easeOut' }
@@ -154,7 +163,6 @@ const ServiceGateway = ({ onSelect }) => {
                   ...(isHovered && !isMobile ? {
                     boxShadow: `0 20px 40px -10px ${category.shadowColor}`
                   } : {}),
-                  // Forzar aceleración GPU
                   transform: 'translateZ(0)',
                   backfaceVisibility: 'hidden',
                   WebkitFontSmoothing: 'antialiased'
