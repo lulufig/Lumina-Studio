@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-// eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 
 const ServiceGateway = ({ onSelect }) => {
@@ -54,19 +53,7 @@ const ServiceGateway = ({ onSelect }) => {
 
   // Animaciones optimizadas: suaves para móvil, completas para desktop
   const cardVariants = isMobile
-    ? {
-        hidden: { opacity: 0, y: 20 },
-        visible: (index) => ({ 
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          transition: { 
-            duration: 0.4,
-            delay: index * 0.1,
-            ease: 'easeOut'
-          } 
-        }),
-      }
+    ? null
     : {
         hidden: { opacity: 0, y: 40, scale: 0.95 },
         visible: (index) => ({
@@ -152,20 +139,25 @@ const ServiceGateway = ({ onSelect }) => {
           {categories.map((category, index) => {
             const isHovered = hoveredCard === category.id;
 
+            const CardWrapper = isMobile ? 'div' : motion.div;
+            const cardProps = isMobile ? {} : {
+              custom: index,
+              variants: cardVariants,
+              initial: "hidden",
+              whileInView: "visible",
+              viewport: { once: true, margin: "-10%" },
+              whileHover: { 
+                scale: 1.02,
+                transition: { duration: 0.3, ease: 'easeOut' }
+              },
+              onMouseEnter: () => setHoveredCard(category.id),
+              onMouseLeave: () => setHoveredCard(null),
+            };
+
             return (
-              <motion.div
+              <CardWrapper
                 key={category.id}
-                custom={index}
-                variants={cardVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-10%" }}
-                whileHover={isMobile ? undefined : { 
-                  scale: 1.02,
-                  transition: { duration: 0.3, ease: 'easeOut' }
-                }}
-                onMouseEnter={() => !isMobile && setHoveredCard(category.id)}
-                onMouseLeave={() => !isMobile && setHoveredCard(null)}
+                {...cardProps}
                 onClick={() => handleCardClick(category.id)}
                 className={`
                   relative bg-white rounded-3xl shadow-lg cursor-pointer
@@ -177,7 +169,7 @@ const ServiceGateway = ({ onSelect }) => {
                   overflow-hidden
                 `}
                 style={{
-                  willChange: 'opacity, transform',
+                  ...(isMobile ? {} : { willChange: 'opacity, transform' }),
                   ...(isHovered && !isMobile ? {
                     boxShadow: `0 20px 40px -10px ${category.shadowColor}`
                   } : {})
@@ -317,7 +309,7 @@ const ServiceGateway = ({ onSelect }) => {
                     </motion.div>
                   )}
                 </div>
-              </motion.div>
+              </CardWrapper>
             );
           })}
         </div>
