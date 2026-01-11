@@ -12,12 +12,19 @@ const ServiceGateway = ({ onSelect }) => {
   });
 
   useEffect(() => {
+    let timeoutId;
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        setIsMobile(window.innerWidth < 768);
+      }, 100);
     };
     checkMobile();
     window.addEventListener('resize', checkMobile, { passive: true });
-    return () => window.removeEventListener('resize', checkMobile);
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('resize', checkMobile);
+    };
   }, []);
 
   const categories = [
@@ -48,10 +55,11 @@ const ServiceGateway = ({ onSelect }) => {
   // Animaciones optimizadas: suaves para móvil, completas para desktop
   const cardVariants = isMobile
     ? {
-        hidden: { opacity: 0, y: 15 },
+        hidden: { opacity: 0, y: 20 },
         visible: (index) => ({ 
           opacity: 1,
           y: 0,
+          scale: 1,
           transition: { 
             duration: 0.4,
             delay: index * 0.1,
@@ -60,7 +68,7 @@ const ServiceGateway = ({ onSelect }) => {
         }),
       }
     : {
-        hidden: { opacity: 0, y: 30, scale: 0.95 },
+        hidden: { opacity: 0, y: 40, scale: 0.95 },
         visible: (index) => ({
           opacity: 1,
           y: 0,
@@ -151,7 +159,7 @@ const ServiceGateway = ({ onSelect }) => {
                 variants={cardVariants}
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true, amount: isMobile ? 0.5 : 0.2 }}
+                viewport={{ once: true, margin: "-10%" }}
                 whileHover={isMobile ? undefined : { 
                   scale: 1.02,
                   transition: { duration: 0.3, ease: 'easeOut' }
@@ -169,7 +177,7 @@ const ServiceGateway = ({ onSelect }) => {
                   overflow-hidden
                 `}
                 style={{
-                  ...(isMobile ? {} : { willChange: 'transform' }),
+                  willChange: 'opacity, transform',
                   ...(isHovered && !isMobile ? {
                     boxShadow: `0 20px 40px -10px ${category.shadowColor}`
                   } : {})
@@ -190,47 +198,46 @@ const ServiceGateway = ({ onSelect }) => {
                 {/* Content */}
                 <div className="relative px-6 pt-6 pb-6 md:px-8 md:pt-8 md:pb-6 flex flex-col h-full">
                   {/* Title */}
-                  <motion.div 
-                    className="mb-3"
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ 
-                      delay: isMobile ? index * 0.1 + 0.2 : index * 0.15 + 0.3, 
-                      duration: isMobile ? 0.3 : 0.4 
-                    }}
-                  >
-                    <h3 className="font-InstrumentSerif text-2xl md:text-3xl text-lumina-blue">
-                      {category.title}
-                    </h3>
-                  </motion.div>
+                  {isMobile ? (
+                    <div className="mb-3">
+                      <h3 className="font-InstrumentSerif text-2xl md:text-3xl text-lumina-blue">
+                        {category.title}
+                      </h3>
+                    </div>
+                  ) : (
+                    <motion.div 
+                      className="mb-3"
+                      initial={{ opacity: 0, x: -10 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.15 + 0.3, duration: 0.4 }}
+                    >
+                      <h3 className="font-InstrumentSerif text-2xl md:text-3xl text-lumina-blue">
+                        {category.title}
+                      </h3>
+                    </motion.div>
+                  )}
 
                   {/* Description */}
-                  <motion.p 
-                    className="font-Manrope text-sm md:text-base text-lumina-dark/70 mb-6 leading-relaxed grow"
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ 
-                      delay: isMobile ? index * 0.1 + 0.3 : index * 0.15 + 0.4, 
-                      duration: isMobile ? 0.3 : 0.4 
-                    }}
-                  >
-                    {category.description}
-                  </motion.p>
-
-                  {/* Button */}
                   {isMobile ? (
-                    <motion.div 
-                      className="mt-auto"
+                    <p className="font-Manrope text-sm md:text-base text-lumina-dark/70 mb-6 leading-relaxed grow">
+                      {category.description}
+                    </p>
+                  ) : (
+                    <motion.p 
+                      className="font-Manrope text-sm md:text-base text-lumina-dark/70 mb-6 leading-relaxed grow"
                       initial={{ opacity: 0 }}
                       whileInView={{ opacity: 1 }}
                       viewport={{ once: true }}
-                      transition={{ 
-                        delay: index * 0.1 + 0.4, 
-                        duration: 0.3 
-                      }}
+                      transition={{ delay: index * 0.15 + 0.4, duration: 0.4 }}
                     >
+                      {category.description}
+                    </motion.p>
+                  )}
+
+                  {/* Button */}
+                  {isMobile ? (
+                    <div className="mt-auto">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -251,7 +258,7 @@ const ServiceGateway = ({ onSelect }) => {
                           <path d="M9 5l7 7-7 7" />
                         </svg>
                       </button>
-                    </motion.div>
+                    </div>
                   ) : (
                     <motion.div 
                       className="mt-auto"
