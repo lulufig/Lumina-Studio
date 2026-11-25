@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 860" width="1080" height="860"><defs><linearGradient id="fn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0c1b3f"/><stop offset="1" stop-color="#2a3d75"/></linearGradient><filter id="oleo"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 0.5  0 0 0 0 0.45  0 0 0 0 0.35  0 0 0 0.16 0"/><feComposite in2="SourceGraphic" operator="in"/></filter></defs>
+    <rect width="1080" height="860" fill="#d8c7a3"/>
+    <rect x="200" y="200" width="680" height="460" fill="#f4ead2" stroke="#b49a6a" stroke-width="6"/>
+    <path d="M200 200 L540 470 L880 200" fill="none" stroke="#b49a6a" stroke-width="6"/>
+    <circle cx="540" cy="470" r="60" fill="#8e2b3a"/><text x="540" y="495" font-family="Georgia,serif" font-size="70" fill="#f3dc9c" text-anchor="middle">V</text>
+    <rect width="1080" height="860" filter="url(#oleo)"/></svg>

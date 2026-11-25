@@ -4,6 +4,7 @@ import Hero from './components/Hero/Hero';
 import PropuestaValor from './components/PropuestaValor/PropuestaValor';
 import ServiceGateway from './components/ServiceGateway/ServiceGateway';
 import SolutionsContainer from './components/SolutionsContainer/SolutionsContainer';
+import Portafolio from './components/Portafolio/Portafolio';
 import FAQ from './components/FAQ/FAQ';
 import Footer from './components/Footer/Footer';
 
@@ -34,6 +35,7 @@ function App() {
         activeTab={activeCategory} 
         setActiveTab={setActiveCategory} 
       />
+      <Portafolio />
       <FAQ />
       <Footer />
       

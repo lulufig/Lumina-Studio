@@ -1,0 +1,1197 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#f4eeff" />
+<!-- Invitación personal con dirección y teléfono: se reparte por WhatsApp,
+     no tiene por qué aparecer en buscadores. -->
+<meta name="robots" content="noindex, nofollow" />
+<!-- Título y og: escritos acá en el HTML, no puestos por JS: el robot que arma
+     la vista previa de WhatsApp no ejecuta JavaScript, así que lo que
+     renderEventContent() escriba llega tarde. Actualizar a mano si cambian
+     nombre/fecha. -->
+<title>¡Me recibí de Programadora! 🎓 · Demo Lúmina</title>
+<meta property="og:title" content="¡Me recibí de Programadora! 🎓" />
+<meta property="og:description" content="Vengan a festejar conmigo · Confirmá tu asistencia" />
+<meta property="og:type" content="website" />
+<!-- og:image pide URL absoluta (https://tu-dominio.vercel.app/...): completar
+     cuando esté deployado, si no WhatsApp no muestra miniatura. -->
+
+<!-- Las animaciones de "tipeo" solo se esconden si hay JS: sin JS el código se ve completo.
+     scrollRestoration manual: la invitación siempre arranca arriba; si no, al recargar
+     (Live Server, o el invitado que vuelve a abrirla) el navegador restaura el scroll
+     y la persona entra directo a la mitad de la página. -->
+<script>
+document.documentElement.classList.add("js");
+if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+</script>
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%9C%3C/text%3E%3C/svg%3E" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Pacifico&family=JetBrains+Mono:wght@400;600;800&family=Nunito:wght@400;600;800&display=swap">
+
+<style>
+/* ======================================================================
+   DESIGN TOKENS — "escritorio Y2K lila": fondo lavanda claro, ventanitas
+   con barra de título lila y ventanas de código en violeta profundo.
+   Bagel Fat One (redondeada, gordita) para títulos, JetBrains Mono para
+   todo lo que es código, Nunito para los párrafos.
+   ====================================================================== */
+:root{
+  --bg:        #f4eeff;
+  --card:      #ffffff;
+  --ink:       #2a1650;
+  --ink-dim:   #6a5a93;
+  --lila:      #b79cff;
+  --lila-soft: #d9c8ff;
+  --violet:    #7c4ce6;
+  --violet-deep:#5b2fc4;
+  --magenta:   #c026d3;
+  --fuchsia:   #a21caf;   /* magenta más oscuro: da contraste AA para texto sobre el lavanda */
+  --pink:      #ff8fd8;
+  --plum:      #241046;   /* fondo de las ventanas de código y trazo de todos los bordes */
+
+  /* colores de "resaltado de sintaxis" sobre --plum (todos con contraste AA) */
+  --c-key: #d5c4ff;
+  --c-str: #7dffb3;
+  --c-kw:  #ff8fd8;
+  --c-fn:  #b79cff;
+  --c-com: #a493d0;
+  --c-num: #ffd6a5;
+
+  --font-display: "Bagel Fat One", "Trebuchet MS", system-ui, sans-serif;
+  --font-script:  "Pacifico", "Brush Script MT", cursive;   /* solo para la invitación bajo el título */
+  --font-body:    "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-code:    "JetBrains Mono", "Fira Code", ui-monospace, "Courier New", monospace;
+
+  /* Escala de espaciado, base 4px: todo el espaciado sale de acá. */
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px; --s7: 48px; --s8: 64px;
+
+  --radius: 16px;
+  color-scheme: light;
+}
+
+/* Sin scroll-behavior:smooth global: hacía que scrollTo(0,0) al entrar fuera animado.
+   El scroll suave de "DESLIZÁ" se pide a mano en initScrollCue(). */
+*{ box-sizing: border-box; }
+body{
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.55;
+  overflow-x: hidden;
+  background-color: var(--bg);
+  /* puntitos suaves + dos brillos de color en las esquinas */
+  background-image:
+    radial-gradient(60% 35% at 100% 0%, rgba(255,143,216,.28), transparent 70%),
+    radial-gradient(60% 35% at 0% 60%, rgba(183,156,255,.30), transparent 70%),
+    radial-gradient(rgba(124,76,230,.16) 1.3px, transparent 1.4px);
+  background-size: auto, auto, 22px 22px;
+  background-attachment: scroll;
+}
+h1,h2,h3{ font-family: var(--font-display); font-weight: 400; line-height: 1.15; margin: 0; }
+img{ max-width: 100%; }
+a{ color: var(--violet-deep); }
+button{ font-family: inherit; }
+[hidden]{ display: none !important; }
+:focus-visible{ outline: 3px solid var(--pink); outline-offset: 3px; }
+
+.page{ position: relative; overflow-x: clip; }
+.wrap{ position: relative; max-width: 640px; margin: 0 auto; padding: 0 var(--s5); }
+.section{ position: relative; padding: var(--s8) 0; }
+.section-head{ text-align: center; margin-bottom: var(--s6); position: relative; z-index: 1; }
+.section-title{
+  font-size: clamp(28px, 8vw, 40px);
+  color: var(--violet);
+  text-shadow: 2px 2px 0 #fff, 4px 4px 0 var(--lila-soft);
+}
+.section-sub{ margin: var(--s3) auto 0; max-width: 34ch; color: var(--ink-dim); }
+
+/* Etiqueta chiquita arriba de cada título, estilo "tag" de código. */
+.eyebrow{
+  display: inline-block;
+  font-family: var(--font-code);
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: .5px;
+  color: var(--violet-deep);
+  background: #fff;
+  border: 2px solid var(--plum);
+  border-radius: 999px;
+  padding: 5px 14px;
+  margin: 0 0 var(--s4);
+  box-shadow: 3px 3px 0 var(--lila);
+  position: relative; z-index: 1;   /* por encima de los stickers de fondo */
+}
+
+/* ======================================================================
+   STICKERS — imágenes reales recortadas de tu collage (carpeta img/).
+   Son decorativas: sin interacción, detrás de las ventanas.
+   ====================================================================== */
+.stk{
+  position: absolute; z-index: 0;
+  height: auto;
+  pointer-events: none; user-select: none; -webkit-user-drag: none;
+  transform: rotate(var(--r, 0deg));
+  filter: drop-shadow(0 6px 7px rgba(60,20,120,.22));
+}
+.stk.front{ z-index: 3; }
+.float{ animation: floaty var(--t, 7s) ease-in-out var(--d, 0s) infinite; }
+@keyframes floaty{
+  0%,100%{ transform: translateY(0) rotate(var(--r, 0deg)); }
+  50%    { transform: translateY(-9px) rotate(calc(var(--r, 0deg) + 4deg)); }
+}
+
+/* ======================================================================
+   VENTANITA — el componente que repite todo el sitio.
+   ====================================================================== */
+.win{
+  position: relative; z-index: 1;
+  background: var(--card);
+  border: 2.5px solid var(--plum);
+  border-radius: var(--radius);
+  box-shadow: 6px 6px 0 var(--lila);
+  overflow: hidden;
+}
+.win-bar{
+  display: flex; align-items: center; justify-content: space-between; gap: var(--s3);
+  padding: 8px 12px;
+  background: linear-gradient(90deg, #d9c8ff, #c4a8ff 55%, #ffb7ea);
+  border-bottom: 2.5px solid var(--plum);
+  color: var(--plum);
+  font-family: var(--font-code); font-weight: 800; font-size: 13px;
+}
+.win-title{ min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.win-btns{ display: flex; gap: 6px; flex: none; }
+.win-btns i{
+  width: 18px; height: 18px; display: grid; place-items: center;
+  background: #fff; border: 2px solid var(--plum); border-radius: 5px;
+  font-style: normal; font-size: 10px; line-height: 1; color: var(--plum);
+}
+.win-body{ padding: var(--s5) var(--s4); }
+.win-body.flush{ padding: 0; }
+.win.dark .win-body{ background: var(--plum); color: #efe8ff; }
+
+/* ---------- Meme "asomándose" por arriba de una ventana ----------
+   El sticker queda detrás de la ventana: el corte plano de abajo (los
+   recortes son de medio cuerpo) se tapa con la barra de título. */
+.peek{ position: relative; margin-top: calc(var(--pw) * var(--ar) - 18px); }
+.peek-img{
+  position: absolute; z-index: 0;
+  bottom: calc(100% - 26px);
+  width: var(--pw); height: auto;
+  left: 8px;
+  pointer-events: none; user-select: none;
+  transform-origin: 50% 100%;
+  transform: rotate(var(--r, 0deg));
+  filter: drop-shadow(0 6px 7px rgba(60,20,120,.25));
+}
+.peek.rev .peek-img{ left: auto; right: 8px; }
+.peek-img.pop{ animation: pop .7s cubic-bezier(.3,1.6,.5,1); }
+@keyframes pop{
+  0%{ transform: rotate(var(--r,0deg)) scale(1); }
+  35%{ transform: rotate(var(--r,0deg)) scale(1.18) translateY(-10px); }
+  100%{ transform: rotate(var(--r,0deg)) scale(1); }
+}
+.bubble{
+  position: absolute; z-index: 2;
+  bottom: calc(100% + 6px); left: min(calc(var(--pw) + 20px), calc(100% - 124px));
+  width: max-content;
+  max-width: max(124px, calc(100% - var(--pw) - 32px));
+  background: #fff; color: var(--ink);
+  border: 2.5px solid var(--plum); border-radius: 14px;
+  padding: 6px 10px;
+  font-family: var(--font-code); font-weight: 600; font-size: 12px; line-height: 1.4;
+  box-shadow: 3px 3px 0 var(--lila);
+  transform: rotate(2deg);
+}
+.bubble::after{
+  content: ""; position: absolute; bottom: -8px; left: 16px; width: 12px; height: 12px;
+  background: #fff; border-right: 2.5px solid var(--plum); border-bottom: 2.5px solid var(--plum);
+  transform: rotate(45deg);
+}
+.peek.rev .bubble{ left: auto; right: min(calc(var(--pw) + 20px), calc(100% - 124px)); transform: rotate(-2deg); }
+.peek.rev .bubble::after{ left: auto; right: 16px; }
+
+/* ---------- Código ---------- */
+.code{ font-family: var(--font-code); font-size: 14px; line-height: 1.8; counter-reset: ln; }
+.code .ln{
+  display: block; width: fit-content; max-width: 100%;
+  counter-increment: ln;
+  padding-left: 3.5ch; text-indent: -3.5ch;
+  white-space: pre-wrap; overflow-wrap: anywhere;
+}
+.code .ln::before{
+  content: counter(ln);
+  display: inline-block; width: 2ch; margin-right: 1.5ch; text-align: right; text-indent: 0;
+  color: var(--c-com); opacity: .7;
+}
+.sp{ display: inline-block; width: 2ch; }
+.kw{ color: var(--c-kw); } .fn{ color: var(--c-fn); } .key{ color: var(--c-key); }
+.str{ color: var(--c-str); } .num{ color: var(--c-num); } .com{ color: var(--c-com); }
+.cursor{ color: var(--c-kw); animation: blink 1s step-end infinite; }
+@keyframes blink{ 50%{ opacity: 0; } }
+
+/* Tipeo línea por línea: solo si hay JS (clase .js). Arranca cuando el bloque entra en
+   pantalla (initScrollFx le pone .go); la duración de cada línea la calcula initTyping(). */
+.js .typing .ln{ clip-path: inset(0 100% 0 0); }
+.js .typing.go .ln{ animation: typeLn var(--dur, .5s) steps(var(--n, 10)) forwards; }
+/* Estado final fijado a mano (initTyping lo pone en "animationend"): Chrome a veces termina la
+   animación con un progreso de 0.99999999999 por redondeo, y con steps() eso deja la última
+   línea (o el último carácter) recortada para siempre. */
+.js .typing .ln.typed{ clip-path: none; animation: none; }
+@keyframes typeLn{ to{ clip-path: inset(0 0 0 0); } }
+
+/* ---------- Botones ---------- */
+.btn{
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--s2);
+  width: 100%;
+  font-family: var(--font-display); font-size: 17px; line-height: 1.2;
+  text-decoration: none; text-align: center;
+  color: #fff;
+  background: linear-gradient(135deg, var(--violet), var(--magenta));
+  border: 2.5px solid var(--plum); border-radius: 999px;
+  box-shadow: 4px 4px 0 var(--plum);
+  padding: 14px var(--s5);
+  cursor: pointer;
+  transition: transform .08s ease, box-shadow .08s ease;
+}
+.btn:active{ transform: translate(3px, 3px); box-shadow: 1px 1px 0 var(--plum); }
+.btn-lila{ background: var(--lila-soft); color: var(--plum); }
+.btn-outline{ background: #fff; color: var(--plum); }
+
+/* ============================= BOOT SCREEN ============================= */
+#bootScreen{
+  position: fixed; inset: 0; z-index: 2000;
+  background-color: var(--bg);
+  background-image: radial-gradient(rgba(124,76,230,.16) 1.3px, transparent 1.4px);
+  background-size: 22px 22px;
+  /* columna: arriba el terminal (centrado en el espacio que sobra), abajo las fotos pegadas al borde */
+  display: flex; flex-direction: column; align-items: center;
+  padding: var(--s5) var(--s5) 0;
+  overflow: hidden;
+  cursor: pointer;
+  transition: opacity .5s ease;
+}
+#bootScreen.is-hidden{ opacity: 0; pointer-events: none; }
+.boot-stage{ flex: 1 1 auto; min-height: 0; width: 100%; display: flex; align-items: center; justify-content: center; }
+.boot-win{ width: min(360px, 100%); }
+
+/* Las fotos (luli-vaquera*.webp) son recortes de medio cuerpo: se apoyan en el borde inferior de la
+   pantalla, que tapa el corte plano. margin-bottom negativo = se pasan un poco del borde (así al
+   inclinarlas no se levanta una esquina y deja ver el corte). El alto se adapta a la pantalla y en
+   pantallas muy bajitas se ocultan para no pisar el terminal. */
+.boot-crew{
+  --crew-gap: clamp(20px, 7vw, 56px);                    /* separación entre las dos */
+  flex: none; align-self: stretch; height: min(44vh, 380px);
+  margin: 0 calc(14px - var(--s5));                      /* casi de borde a borde (14px de aire: si no, el vaso se corta) */
+  display: flex; align-items: flex-end; justify-content: center; gap: var(--crew-gap);
+  pointer-events: none;
+}
+.boot-girl{
+  height: 100%; width: auto; max-width: calc(50% - var(--crew-gap) / 2);
+  object-fit: contain; object-position: bottom;
+  margin-bottom: -12px;
+  transform-origin: 50% 100%;
+  filter: drop-shadow(0 6px 8px rgba(60,20,120,.25));
+  animation: crewUp .9s cubic-bezier(.2,.9,.3,1.15) backwards;
+}
+.boot-girl.l{ transform: rotate(-2deg); animation-delay: .5s; }
+.boot-girl.r{ transform: rotate(2deg); animation-delay: .75s; }
+@keyframes crewUp{ from{ translate: 0 70%; opacity: 0; } }
+@media (max-height: 560px){ .boot-crew{ display: none; } }
+/* el destello vive en el hueco entre el terminal y las fotos: en pantallas bajitas no hay hueco y queda tapado */
+@media (max-height: 680px){ .boot-sparkle{ display: none; } }
+.boot-win .win-body{ font-family: var(--font-code); font-size: 14px; line-height: 1.7; padding: var(--s5) var(--s4); }
+.bl{ margin: 0 0 var(--s2); animation: bootIn .3s ease-out backwards; }
+.bl:nth-child(1){ animation-delay: .1s; }
+.bl:nth-child(2){ animation-delay: .5s; }
+.bl:nth-child(3){ animation-delay: .8s; }
+.bl:nth-child(4){ animation-delay: 1.9s; }
+@keyframes bootIn{ from{ opacity: 0; transform: translateY(4px); } }
+.boot-bar{ height: 18px; border: 2.5px solid var(--c-key); border-radius: 999px; padding: 2px; margin-bottom: var(--s3); animation: bootIn .3s ease-out .8s backwards; }
+.boot-bar-fill{ height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--lila), var(--pink)); width: 0%; animation: loadBar 1.1s steps(18) .8s forwards; }
+@keyframes loadBar{ to{ width: 100%; } }
+.boot-prompt{
+  margin: var(--s4) 0 0; text-align: center;
+  font-family: var(--font-display); font-size: 17px; color: var(--pink);
+  opacity: 0; animation: blink 1s step-end infinite, appear 0s 1.9s forwards;
+}
+@keyframes appear{ to{ opacity: 1; } }
+.ok{ color: var(--c-str); }
+.pr{ color: var(--c-kw); }
+
+/* ============================= HERO ============================= */
+.hero{ padding: 110px 0 var(--s7); }
+.hero-inner{ text-align: center; }
+.hero-title{
+  font-size: clamp(32px, 9.6vw, 58px);
+  color: var(--violet);
+  margin: 0 0 var(--s3);
+  text-shadow:
+    -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff, 2px 2px 0 #fff,
+    0 6px 0 var(--lila-soft), 0 10px 16px rgba(91,47,196,.25);
+  position: relative; z-index: 1;
+}
+/* la invitación, justo debajo del título: letra script (cursiva) para que contraste con la
+   fuente gordita del título en vez de competir con ella; apenas inclinada, como escrita a mano */
+.hero-invite{
+  font-family: var(--font-script);
+  font-size: clamp(22px, 7.4vw, 32px); line-height: 1.3;
+  color: var(--fuchsia);
+  max-width: 30ch; margin: 0 auto var(--s5);
+  text-wrap: balance;
+  text-shadow: 1px 2px 0 rgba(255,255,255,.9);
+  transform: rotate(-2deg);
+  position: relative; z-index: 1;
+}
+.hero .code{ text-align: left; }
+.hero-sub{ font-size: 19px; color: var(--ink-dim); max-width: 44ch; margin: var(--s6) auto var(--s6); position: relative; z-index: 1; }
+.scroll-cue{
+  display: inline-block; position: relative; z-index: 1;
+  font-family: var(--font-code); font-weight: 800; font-size: 12px; color: var(--violet-deep);
+  text-decoration: none; animation: bob 1.6s ease-in-out infinite;
+}
+@keyframes bob{ 50%{ transform: translateY(6px); } }
+
+/* ============================= DETALLES ============================= */
+.json .ln{ font-size: 14px; }
+.json .str::before, .json .str::after{ content: '"'; }
+.map-tint{ position: relative; }
+.map-tint::after{ content: ""; position: absolute; inset: 0; background: rgba(160,120,255,.14); mix-blend-mode: multiply; pointer-events: none; }
+.map-tint iframe{ display: block; width: 100%; height: 260px; border: 0; filter: saturate(.7) contrast(.98); }
+.map-actions{ margin-top: var(--s5); position: relative; z-index: 1; }
+
+/* ============================= RSVP ============================= */
+.rsvp-code{ font-family: var(--font-code); font-size: 14px; margin: 0 0 var(--s5); }
+.rsvp-field{ margin-bottom: var(--s5); text-align: left; }
+.rsvp-field > label, .rsvp-legend{
+  display: block; font-family: var(--font-code); font-weight: 600; font-size: 13px;
+  color: var(--ink-dim); margin-bottom: var(--s2);
+}
+.rsvp-field input[type="text"]{
+  width: 100%; background: #fff; color: var(--ink);
+  border: 2.5px solid var(--plum); border-radius: 12px;
+  font-family: var(--font-code); font-size: 16px; padding: 12px var(--s4);
+}
+.rsvp-field input[type="text"]:focus{ outline: 3px solid var(--pink); outline-offset: 2px; }
+.attend-toggle{ display: grid; grid-template-columns: 1fr 1fr; gap: var(--s3); }
+.attend-toggle input{ position: absolute; opacity: 0; pointer-events: none; }
+.attend-toggle label{
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; text-align: center;
+  border: 2.5px solid var(--plum); border-radius: 12px; background: #fff;
+  padding: var(--s3) var(--s2); cursor: pointer; min-height: 72px;
+}
+.opt-main{ font-weight: 800; font-size: 15px; line-height: 1.25; text-wrap: balance; }
+.opt-code{ font-family: var(--font-code); font-size: 12px; color: var(--ink-dim); }
+.attend-toggle input:checked + label{ background: var(--lila-soft); box-shadow: 3px 3px 0 var(--violet); }
+.attend-toggle input:focus-visible + label{ outline: 3px solid var(--pink); outline-offset: 2px; }
+.thanks{ text-align: center; }
+.thanks-img{ display: block; width: 150px; height: auto; margin: 0 auto var(--s3); filter: drop-shadow(0 6px 7px rgba(60,20,120,.25)); }
+.thanks-title{ font-size: 24px; color: var(--violet-deep); margin-bottom: var(--s3); }
+.thanks p{ margin: 0; color: var(--ink-dim); }
+.rsvp-status{ text-align: center; }
+.rsvp-status p{ margin: 0 0 var(--s5); color: var(--ink-dim); }
+.rsvp-status strong{ color: var(--violet-deep); }
+#editRsvpBtn{ background: none; border: none; color: var(--ink-dim); text-decoration: underline; font-size: 15px; margin-top: var(--s4); cursor: pointer; padding: var(--s2); }
+
+/* Confeti hecho con los propios stickers (estrellas, corazones, besitos). */
+.confetti-piece{ position: fixed; top: -60px; z-index: 1500; pointer-events: none; height: auto; }
+
+/* ============================= PLAYLIST ============================= */
+.spotify-embed iframe{ display: block; width: 100%; height: 352px; border: 0; }
+.playlist-empty{ text-align: center; padding: var(--s6) var(--s5); }
+.playlist-empty h3{ font-size: 22px; color: var(--violet-deep); margin-bottom: var(--s2); }
+.playlist-empty p{ margin: 0; color: var(--ink-dim); }
+.playlist-actions{ padding: var(--s4); border-top: 2.5px solid var(--plum); background: var(--bg); }
+
+/* ======================================================================
+   ANIMACIONES DE SCROLL — las agrega initScrollFx() (JS) a los elementos a
+   medida que entran en pantalla. Usan las propiedades individuales
+   translate/scale (no "transform"): los stickers ya usan transform para
+   rotar y flotar, así las animaciones se suman en vez de pisarse.
+   Solo existen con JS y sin "reducir movimiento" (ver .no-fx más abajo).
+   ====================================================================== */
+.js .fx{
+  opacity: 0;
+  transition:
+    opacity .6s ease var(--fd, 0s),
+    translate .8s cubic-bezier(.2,.8,.2,1) var(--fd, 0s),
+    scale .7s cubic-bezier(.3,1.5,.5,1) var(--fd, 0s);   /* el 1.5 hace el "rebote" al aparecer */
+}
+.js .fx-up{ translate: 0 36px; }
+.js .fx-pop{ scale: .4; }
+/* los memes suben desde atrás de la ventana (la ventana tapa el corte de abajo) */
+.js .fx-peek{ translate: 0 calc(var(--pw) * var(--ar) * .95); }
+.js .fx.in{ opacity: 1; translate: 0 0; scale: 1; }
+/* ya aparecidos, los stickers siguen el scroll con --py (parallax): sin transición, si no llegan tarde */
+.js .stk.fx-done{ translate: 0 calc(var(--py, 0) * 1px); transition: none; }
+/* sin IntersectionObserver o con "reducir movimiento": todo visible y quieto */
+.js.no-fx .fx{ opacity: 1 !important; translate: none !important; scale: none !important; transition: none !important; }
+.js.no-fx .typing .ln{ clip-path: none !important; animation: none !important; }
+
+/* Barra de progreso arriba, estilo "cargando" */
+#scrollBar{
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1700;
+  height: 8px;
+  background: rgba(255,255,255,.7);
+  border-bottom: 2px solid var(--plum);
+  pointer-events: none;
+  opacity: 0; transition: opacity .4s ease;
+}
+#scrollBar.on{ opacity: 1; }
+#scrollBar i{
+  display: block; height: 100%; width: 100%;
+  transform-origin: 0 50%; transform: scaleX(var(--p, 0));
+  background: linear-gradient(90deg, var(--lila), var(--pink) 60%, var(--magenta));
+}
+
+/* ============================= FOOTER ============================= */
+footer{
+  position: relative;
+  background: var(--plum); color: #efe8ff;
+  border-radius: 36px 36px 0 0;
+  margin-top: var(--s7);
+  padding: 88px var(--s5) calc(var(--s7) + env(safe-area-inset-bottom, 0px));   /* arriba: lugar para los stickers que asoman (y se mueven con el parallax) */
+  text-align: center;
+}
+.footer-code{ font-family: var(--font-code); font-size: 14px; line-height: 1.8; margin: 0 0 var(--s5); text-align: left; display: inline-block; }
+.footer-credit{ font-weight: 600; color: var(--lila-soft); margin: 0 0 var(--s2); }
+/* el texto del footer va por encima de los stickers (que se mueven con el parallax y podían taparlo) */
+.footer-code, .footer-credit, .brand{ position: relative; z-index: 1; }
+/* Firma minimalista: "© nombre" chiquito y apagado (--c-com tiene contraste AA sobre el violeta). */
+.brand{
+  display: inline-flex; align-items: center; gap: 6px;
+  max-width: 100%;
+  font-family: var(--font-code); font-size: 12px; letter-spacing: .3px; line-height: 1.4;
+  color: var(--c-com);
+  text-decoration: none;
+}
+a.brand[href]:hover{ color: var(--lila-soft); }
+/* si algún día se suma un logo: chapita blanca, así se ve sea claro u oscuro sobre el violeta */
+.brand-logo{ display: block; height: 16px; width: auto; max-width: 64px; object-fit: contain; background: #fff; border-radius: 4px; padding: 1px 3px; }
+
+@media (max-width: 400px){
+  .code, .json .ln{ font-size: 13px; }
+}
+@media (max-width: 340px){
+  .code, .json .ln, .rsvp-code{ font-size: 12px; }
+  .eyebrow{ font-size: 11px; padding: 5px 10px; }
+}
+@media (prefers-reduced-motion: reduce){
+  .float, .scroll-cue, .cursor{ animation: none !important; }
+  .js .typing .ln{ clip-path: none; animation: none !important; }
+  .js .fx{ opacity: 1 !important; translate: none !important; scale: none !important; transition: none !important; }
+  #scrollBar{ transition: none; }
+  .bl, .boot-bar, .boot-girl{ animation: none; }
+  .boot-bar-fill{ animation: none; width: 100%; }
+  .boot-prompt{ animation: appear 0s 0s forwards; }
+  .peek-img.pop{ animation: none; }
+}
+</style>
+</head>
+<body>
+
+<div id="scrollBar" aria-hidden="true"><i></i></div>
+
+<!-- ============================= BOOT SCREEN ============================= -->
+<div id="bootScreen" role="button" tabindex="0" aria-label="Tocá para entrar a la invitación">
+  <img class="stk float" src="img/disco.webp" alt="" aria-hidden="true" draggable="false" style="top:-46px; right:-64px; width:200px; --r:12deg;">
+  <img class="stk float" src="img/star-chrome.webp" alt="" aria-hidden="true" draggable="false" style="top:9%; left:-14px; width:84px; --r:-14deg; --d:-2s;">
+  <img class="stk float boot-sparkle" src="img/sparkle.webp" alt="" aria-hidden="true" draggable="false" style="bottom:calc(min(44vh, 380px) + 22px); left:12px; width:58px; --r:-10deg; --d:-4s;">
+  <div class="boot-stage">
+    <div class="win dark boot-win">
+      <div class="win-bar"><span class="win-title">terminal</span><span class="win-btns" aria-hidden="true"><i>_</i><i>▢</i><i>✕</i></span></div>
+      <div class="win-body">
+        <p class="bl"><span class="pr">$</span> npm install fiesta</p>
+        <p class="bl com">compilando la fiesta…</p>
+        <div class="boot-bar"><div class="boot-bar-fill"></div></div>
+        <p class="bl"><span class="ok">✔</span> 0 errors, 3 warnings</p>
+        <p class="boot-prompt">▶ TOCÁ PARA CONTINUAR</p>
+      </div>
+    </div>
+  </div>
+  <div class="boot-crew" aria-hidden="true">
+    <img class="boot-girl l" src="img/vaquera.svg" alt="" draggable="false">
+    <img class="boot-girl r" src="img/laptop.svg" alt="" draggable="false">
+  </div>
+</div>
+
+<div class="page">
+
+<!-- ============================= HERO ============================= -->
+<section class="hero" id="top">
+  <div class="wrap hero-inner">
+    <img class="stk float" src="img/disco.webp" alt="" aria-hidden="true" draggable="false" style="top:-120px; right:-84px; width:172px; --r:10deg;">
+    <img class="stk float" src="img/star-chrome.webp" alt="" aria-hidden="true" draggable="false" style="top:-62px; left:-22px; width:74px; --r:-16deg; --d:-3s;">
+    <img class="stk float" src="img/star-glitter.webp" alt="" aria-hidden="true" draggable="false" style="bottom:120px; right:-30px; width:76px; --r:14deg; --d:-1s;">
+    <img class="stk float" src="img/sparkle.webp" alt="" aria-hidden="true" draggable="false" style="bottom:34px; left:-34px; width:72px; --r:-8deg; --d:-5s;">
+
+    <p class="eyebrow">✦ NUEVO LOGRO DESBLOQUEADO ✦</p>
+    <h1 class="hero-title">¡ME RECIBÍ DE<br>PROGRAMADORA!</h1>
+    <p class="hero-invite">¡Te invito a festejarlo conmigo!&nbsp;🥂</p>
+
+    <div class="peek rev" style="--pw:min(150px, 42vw); --ar:1.19;">
+      <img class="peek-img" src="img/gato.svg" alt="" aria-hidden="true" draggable="false" style="--r:-3deg;">
+      <span class="bubble">// yo leyendo mi primer error de compilación</span>
+      <div class="win dark">
+        <div class="win-bar"><span class="win-title">recibida.js</span><span class="win-btns" aria-hidden="true"><i>_</i><i>▢</i><i>✕</i></span></div>
+        <div class="win-body code typing" data-typing-start="1.3">
+          <span class="ln"><span class="kw">const</span> yo = {</span>
+          <span class="ln"><span class="sp"></span><span class="key">nombre</span>: <span class="str" id="heroName"></span>,</span>
+          <span class="ln"><span class="sp"></span><span class="key">titulo</span>: <span class="str">"Programadora"</span>,</span>
+          <span class="ln"><span class="sp"></span><span class="key">recibida</span>: <span class="num">true</span>,</span>
+          <span class="ln">};</span>
+          <span class="ln">&nbsp;</span>
+          <span class="ln"><span class="kw">if</span> (yo.<span class="key">recibida</span>) <span class="fn">festejar</span>();<span class="cursor">▍</span></span>
+        </div>
+      </div>
+    </div>
+
+    <p class="hero-sub">Después de años de café, bugs a las 3am y commits de madrugada… ¡lo logré! 💜</p>
+    <a class="scroll-cue" href="#detalles">▼ DESLIZÁ ▼</a>
+  </div>
+</section>
+
+<!-- ============================= DETALLES ============================= -->
+<section class="section" id="detalles">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">📋 DATOS DE LA FIESTA</p>
+      <h2 class="section-title">DETALLES DEL EVENTO</h2>
+    </div>
+
+    <div class="peek" style="--pw:min(210px, 54vw); --ar:0.79;">
+      <img class="peek-img" src="img/error404.svg" alt="" aria-hidden="true" loading="lazy" draggable="false" style="--r:-4deg;">
+      <span class="bubble">Error 404: sobriedad not found</span>
+      <div class="win dark">
+        <div class="win-bar"><span class="win-title">evento.json</span><span class="win-btns" aria-hidden="true"><i>_</i><i>▢</i><i>✕</i></span></div>
+        <div class="win-body code json typing" data-typing-speed="0.014" data-typing-start="0.7">
+          <span class="ln">{</span>
+          <span class="ln"><span class="sp"></span><span class="key">"fecha"</span>: <span class="str" id="detailDate"></span>,</span>
+          <span class="ln"><span class="sp"></span><span class="key">"hora"</span>: <span class="str" id="detailTime"></span>,</span>
+          <span class="ln"><span class="sp"></span><span class="key">"lugar"</span>: <span class="str" id="detailVenue"></span>,</span>
+          <span class="ln"><span class="sp"></span><span class="key">"direccion"</span>: <span class="str" id="detailAddress"></span><span id="detailAddressComma">,</span></span>
+          <span class="ln" id="detailDressRow"><span class="sp"></span><span class="key">"dress_code"</span>: <span class="str" id="detailDress"></span></span>
+          <span class="ln">}</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="position:relative; margin-top:var(--s6);">
+      <img class="stk float" src="img/star-crystal.webp" alt="" aria-hidden="true" loading="lazy" draggable="false" style="bottom:-38px; right:-34px; width:104px; --r:12deg; --d:-2s;">
+      <div class="win">
+        <div class="win-bar"><span class="win-title">ubicacion.map</span><span class="win-btns" aria-hidden="true"><i>_</i><i>▢</i><i>✕</i></span></div>
+        <div class="win-body flush map-tint">
+          <iframe id="mapEmbed" src="" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin" title="Ubicación del evento"></iframe>
+        </div>
+      </div>
+      <div class="map-actions">
+        <a class="btn btn-lila" id="mapBtn" href="#" target="_blank" rel="noopener">🗺️ CÓMO LLEGAR</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= PLAYLIST COLABORATIVA ============================= -->
+<section class="section" id="spotify">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">🎵 SOUNDTRACK</p>
+      <h2 class="section-title">PLAYLIST COLABORATIVA</h2>
+      <p class="section-sub">Sumá los temas que no pueden faltar en el festejo.</p>
+    </div>
+    <div style="position:relative; margin-top:88px;">
+      <img class="stk float" src="img/cassette.webp" alt="" aria-hidden="true" loading="lazy" draggable="false" style="top:-104px; right:-24px; width:170px; --r:8deg;">
+      <img class="stk float" src="img/cd.webp" alt="" aria-hidden="true" loading="lazy" draggable="false" style="bottom:-56px; left:-36px; width:120px; --r:-10deg; --d:-3s;">
+      <img class="stk float" src="img/star-denim.webp" alt="" aria-hidden="true" loading="lazy" draggable="false" style="top:-84px; left:-22px; width:96px; --r:-14deg; --d:-5s;">
+      <div class="win">
+        <div class="win-bar"><span class="win-title">playlist.mp3</span><span class="win-btns" aria-hidden="true"><i>_</i><i>▢</i><i>✕</i></span></div>
+        <div class="win-body flush">
+          <div class="spotify-embed" id="spotifyEmbedWrap">
+            <iframe id="spotifyEmbed" src="" loading="lazy" title="Playlist colaborativa del evento" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+          </div>
+          <div class="playlist-empty" id="spotifyEmpty" hidden>
+            <h3>Playlist en camino 🎧</h3>
+            <p>Muy pronto vas a poder sumar tus temas desde acá.</p>
+          </div>
+          <div class="playlist-actions" id="spotifyActions">
+            <a class="btn" id="spotifyAddBtn" href="#" target="_blank" rel="noopener">🎵 SUMAR MI CANCIÓN</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= RSVP ============================= -->
+<section class="section" id="rsvp">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">💌 TU LUGAR TE ESPERA</p>
+      <h2 class="section-title">CONFIRMÁ TU ASISTENCIA</h2>
+    </div>
+
+    <div class="peek rev" style="--pw:min(158px, 44vw); --ar:1.17;">
+      <img class="peek-img" id="rsvpMono" src="img/corazon.svg" alt="" aria-hidden="true" loading="lazy" draggable="false" style="--r:3deg;">
+      <span class="bubble" id="rsvpBubble">¡no faltes! 💜</span>
+      <div class="win">
+        <div class="win-bar"><span class="win-title">rsvp.js</span><span class="win-btns" aria-hidden="true"><i>_</i><i>▢</i><i>✕</i></span></div>
+        <div class="win-body">
+
+          <div id="rsvpFormView">
+            <p class="rsvp-code"><span style="color:var(--magenta)">try</span> { <span style="color:var(--violet-deep)">asistir</span>() }</p>
+            <form id="rsvpForm">
+              <div class="rsvp-field">
+                <label for="rsvpName">// tu nombre</label>
+                <input type="text" id="rsvpName" name="rsvpName" required autocomplete="name" placeholder="Nombre y apellido">
+              </div>
+              <div class="rsvp-field" role="group" aria-labelledby="attendLegend">
+                <span class="rsvp-legend" id="attendLegend">// ¿venís?</span>
+                <div class="attend-toggle">
+                  <input type="radio" id="attendYes" name="attendance" value="yes" checked>
+                  <label for="attendYes"><span class="opt-main">SÍ, AHÍ ESTARÉ 💜</span><span class="opt-code">return true;</span></label>
+                  <input type="radio" id="attendNo" name="attendance" value="no">
+                  <label for="attendNo"><span class="opt-main">NO PUEDO 😢</span><span class="opt-code">throw error;</span></label>
+                </div>
+              </div>
+              <button type="submit" class="btn">CONFIRMAR ➜</button>
+            </form>
+          </div>
+
+          <div id="rsvpThanksView" class="thanks" hidden>
+            <img class="thanks-img" id="thanksImg" src="img/gato.svg" alt="" hidden>
+            <h3 class="thanks-title" id="thanksTitle"></h3>
+            <p id="thanksMessage"></p>
+          </div>
+
+          <div id="rsvpStatusView" class="rsvp-status" hidden>
+            <p id="rsvpStatusText"></p>
+            <a class="btn btn-outline" id="statusWhatsappBtn" href="#" target="_blank" rel="noopener">REENVIAR POR WHATSAPP</a>
+            <button type="button" id="editRsvpBtn">Editar mi respuesta</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <img class="stk float" src="img/lips-1.webp" alt="" aria-hidden="true" loading="lazy" draggable="false" style="top:-46px; left:14px; width:120px; --r:-10deg;">
+  <img class="stk float" src="img/hearts-paper.webp" alt="" aria-hidden="true" loading="lazy" draggable="false" style="top:-40px; right:20px; width:96px; --r:10deg; --d:-3s;">
+  <p class="footer-code"><span class="com">// TODO: brindar 🥂</span><br><span class="kw">return</span> <span class="str">"¡Nos vemos en la fiesta!"</span>;</p>
+  <p class="footer-credit">Hecho con 💜</p>
+  <!-- Firma minimalista "© nombre" (y logo, si hay): se completa desde EVENT.brand. -->
+  <a class="brand" id="brand" hidden>
+    <span class="brand-c">©</span>
+    <img class="brand-logo" id="brandLogo" src="" alt="" hidden>
+    <span class="brand-name" id="brandName"></span>
+  </a>
+</footer>
+
+</div><!-- /.page -->
+
+<script>
+/* ======================================================================
+   CONFIG — datos del evento. Reemplazar estos valores antes de deployar,
+   sin tocar el resto del HTML/CSS/JS. Los campos {{ASI}} son los que hay
+   que completar sí o sí.
+   ====================================================================== */
+const EVENT = {
+  id: "demo-recibida-sofi",        // namespace para localStorage, no hace falta tocarlo
+
+  name: "Sofi Martínez",                  // {{NOMBRE}} — aparece dentro del código del título principal
+
+  dateDisplay: "Sábado 17 de abril, 2027", // {{FECHA}} — texto que se ve en "detalles"
+  timeDisplay: "22:30 hs",            // {{HORA}}
+
+  venueName: "Bar La Terminal",               // {{LUGAR}}
+  address: "San Miguel de Tucumán",     // {{DIRECCION}} — se usa para el mapa embebido y la búsqueda
+  // Mapa embebido: en Google Maps → Compartir → "Insertar un mapa" → copiar solo el
+  // src="..." del iframe y pegarlo acá. Dejar "" para que arme una búsqueda con
+  // venueName + address (menos precisa: depende de que Google encuentre el lugar).
+  mapEmbedUrl: "", // {{MAPA_EMBED}}
+  // Si tenés un link de Google Maps (botón "Compartir" en la app), pegalo acá:
+  // apunta a coordenadas exactas en vez de depender de que la búsqueda por
+  // nombre encuentre el lugar correcto. Dejar "" para que use venueName+address.
+  venueMapsUrl: "",                   // {{MAPS_URL}} (opcional)
+
+
+  // WhatsApp donde llegan las confirmaciones. Código de país + número, sin
+  // espacios/guiones ni el "+" inicial (ej. Argentina: 549 + código de área
+  // sin el 0 + número → "5493511234567"). Probar el botón antes de mandar
+  // la invitación posta.
+  whatsappNumber: "5493865690028",    // {{WHATSAPP}}
+
+  // Mensajes que se precargan en el WhatsApp del invitado al confirmar. {nombre} se
+  // reemplaza por el nombre que escribió. El invitado siempre puede editarlos antes
+  // de tocar "enviar".
+  msgSi: "¡Hola! Soy {nombre}. Confirmo mi asistencia. ¡Nos vemos en la fiesta! 💜",
+  msgNo: "¡Hola! Soy {nombre}. Uy, lamentablemente no voy a poder ir. ¡Que la pasen genial!",
+
+  // Playlist colaborativa: ID de la playlist de Spotify (la parte final de
+  // open.spotify.com/playlist/XXXX). Tiene que estar marcada como
+  // colaborativa y pública. La sección SIEMPRE se muestra: si el ID está
+  // vacío, aparece "Playlist en camino" en lugar del reproductor.
+  spotifyPlaylistId: "37i9dQZF1DXcBWIGoYBM5M",              // {{SPOTIFY_ID}}
+  // Link para que los invitados puedan AGREGAR canciones (en Spotify:
+  // playlist → ⋯ → "Invitar colaboradores" → copiar link). Si lo dejás vacío,
+  // el botón "Sumar mi canción" abre la playlist normal.
+  spotifyInviteUrl: "",               // {{SPOTIFY_INVITE_URL}} (opcional)
+
+  // Tu firma, en el footer: chiquita, "© name". Todo opcional (con name y logo vacíos no se muestra nada):
+  //   name → el texto que va después del ©
+  //   logo → (opcional) ruta a una imagen dentro del proyecto, ej. "img/marca.png"; se ve en miniatura sobre una chapita blanca
+  //   url  → a dónde lleva al tocarla (Instagram, portfolio…). Vacío = no es un link.
+  brand: { name: "Lúmina", logo: "", url: "/" },
+};
+
+const $ = (id) => document.getElementById(id);
+
+/* ======================================================================
+   SONIDO — campanitas generadas con Web Audio, sin ningún archivo de
+   audio. El AudioContext se crea recién en el primer gesto del usuario
+   (tocar el boot screen): los navegadores bloquean audio sin interacción,
+   así que crearlo antes no serviría de nada.
+   ====================================================================== */
+let audioCtx = null;
+function playBlip(freq = 440, duration = 0.08){
+  try{
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = "triangle";
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0.09, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + duration);
+  } catch(e){ /* Web Audio no disponible: se sigue sin sonido, no es crítico */ }
+}
+
+/* ======================================================================
+   RENDER — vuelca el CONFIG de arriba en el markup
+   ====================================================================== */
+function renderEventContent(){
+  $("heroName").textContent = `"${EVENT.name}"`;
+  $("detailDate").textContent = EVENT.dateDisplay;
+  $("detailTime").textContent = EVENT.timeDisplay;
+  $("detailVenue").textContent = EVENT.venueName;
+  $("detailAddress").textContent = EVENT.address;
+  // dressCode es opcional: sin él se saca la fila entera y la coma de la línea de arriba
+  // (si no, el JSON mostraría "dress_code": "undefined").
+  if (EVENT.dressCode){
+    $("detailDress").textContent = EVENT.dressCode;
+  } else {
+    $("detailDressRow").remove();
+    $("detailAddressComma").remove();
+  }
+}
+
+/* MARCA — firma del footer: logo y/o nombre, con link si hay url. */
+function renderBrand(){
+  const b = EVENT.brand || {};
+  const el = $("brand");
+  const hasBrand = !!(b.name || b.logo);
+  if (!hasBrand){ el.remove(); return; }
+  if (b.logo){
+    const img = $("brandLogo");
+    img.src = b.logo; img.alt = b.name ? "" : "Logo";   // con nombre al lado, el logo es decorativo
+    img.hidden = false;
+  }
+  $("brandName").textContent = b.name || "";
+  if (b.url){ el.href = b.url; el.target = "_blank"; el.rel = "noopener"; }
+  el.hidden = false;
+}
+
+/* ======================================================================
+   TIPEO — cada línea de código se "escribe" una tras otra. El CSS hace el
+   efecto (clip-path a pasos); acá solo se calcula cuánto dura cada línea
+   según sus caracteres y cuándo arranca. Corre después de renderEventContent
+   porque el largo de las líneas depende de lo que dice el config.
+   Cada bloque puede ajustarse con data-typing-speed (segundos por carácter)
+   y data-typing-start (espera antes de la primera línea).
+   ====================================================================== */
+function initTyping(){
+  document.querySelectorAll(".typing").forEach((block) => {
+    const speed = parseFloat(block.dataset.typingSpeed) || 0.03;
+    let t = parseFloat(block.dataset.typingStart) || 0.5;
+    block.querySelectorAll(".ln").forEach((ln) => {
+      const n = Math.max(ln.textContent.trim().length, 1);
+      ln.style.setProperty("--n", n);
+      ln.style.setProperty("--dur", `${(n * speed).toFixed(2)}s`);
+      ln.style.animationDelay = `${t.toFixed(2)}s`;
+      ln.addEventListener("animationend", () => ln.classList.add("typed"), { once: true });
+      t += n * speed + 0.1;
+    });
+  });
+}
+
+/* ======================================================================
+   ANIMACIONES DE SCROLL
+   1) Aparición: cada elemento entra (sube / rebota / sale de atrás de su
+      ventana) la primera vez que aparece en pantalla. Se etiquetan solos
+      desde FX_RULES, sin tocar el HTML.
+   2) Los bloques de código (.typing) se escriben al llegar a ellos.
+   3) Los stickers derivan un poco al scrollear (parallax) y hay una barra
+      de progreso arriba.
+   Con "reducir movimiento" o sin IntersectionObserver no se activa nada:
+   todo queda visible y quieto (clase .no-fx).
+   ====================================================================== */
+// [selector, efecto, demora base (s), demora extra por hermano (s)]. La primera regla que
+// coincide con un elemento gana. Las demoras del hero son más largas: la escena arma en orden
+// (título → invitación → ventana → meme → globo) mientras se desvanece la pantalla de carga.
+const FX_RULES = [
+  [".hero .eyebrow",            "fx-up",   0.05],
+  [".hero-title",               "fx-up",   0.2],
+  [".hero-invite",              "fx-up",   0.35],
+  [".hero .win",                "fx-up",   0.5],
+  [".hero .peek-img",           "fx-peek", 1.3],
+  [".hero .bubble",             "fx-pop",  1.65],
+  [".hero-sub",                 "fx-up",   0.85],
+  [".scroll-cue",               "fx-up",   1.05],
+  [".section-head .eyebrow",    "fx-up",   0],
+  [".section-title",            "fx-up",   0.08],
+  [".section-sub",              "fx-up",   0.16],
+  [".section .win",             "fx-up",   0.05],
+  [".section .peek-img",        "fx-peek", 0.6],
+  [".section .bubble",          "fx-pop",  0.95],
+  [".map-actions",              "fx-up",   0.1],
+  ["footer .footer-code, footer .footer-credit, footer .brand", "fx-up", 0, 0.12],
+  [".page .stk",                "fx-pop",  0.15, 0.12],
+];
+
+let scrollFx = null;
+
+function initScrollFx(){
+  const root = document.documentElement;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce || !("IntersectionObserver" in window)){ root.classList.add("no-fx"); return null; }
+
+  const seen = new Set();
+  const siblings = new Map();          // cuántos hermanos ya se etiquetaron, para escalonar
+  const targets = [];
+  FX_RULES.forEach(([sel, cls, base, step = 0]) => {
+    document.querySelectorAll(sel).forEach((el) => {
+      if (seen.has(el)) return;
+      seen.add(el);
+      const n = siblings.get(el.parentElement) || 0;
+      siblings.set(el.parentElement, n + 1);
+      el.classList.add("fx", cls);
+      el.style.setProperty("--fd", `${(base + n * step).toFixed(2)}s`);
+      targets.push(el);
+    });
+  });
+
+  const pending = new Set(targets);
+  let started = false;
+
+  function reveal(el){
+    if (!pending.delete(el)) return;
+    io.unobserve(el);
+    el.classList.add("in");
+    const delay = parseFloat(el.style.getPropertyValue("--fd")) || 0;
+    setTimeout(() => el.classList.add("fx-done"), (delay + 1) * 1000);   // terminó la entrada: ya puede hacer parallax
+  }
+
+  // Se activa a los 4% del borde inferior; con que asome 1px alcanza (importa para
+  // stickers que están casi todos fuera de la pantalla).
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((en) => {
+      if (!en.isIntersecting) return;
+      if (en.target.classList.contains("typing")){ io.unobserve(en.target); en.target.classList.add("go"); return; }
+      reveal(en.target);
+    });
+  }, { rootMargin: "0px 0px -4% 0px", threshold: 0 });
+
+  // Se arma en init() (todo queda oculto detrás de la pantalla de carga) pero recién
+  // se empieza a mirar cuando la persona entra: así la escena arma delante suyo.
+  return {
+    start(){
+      started = true;
+      targets.forEach((el) => io.observe(el));
+      document.querySelectorAll(".typing").forEach((el) => io.observe(el));
+    },
+    // Al llegar al final de la página se revela todo lo que ya asoma. Lo de más abajo (la marca del
+    // footer) arranca corrido hacia abajo y el observer mide la caja ya corrida: sin esto podía
+    // quedar fuera de su zona de activación y no aparecer nunca.
+    flush(){
+      if (!started) return;
+      const vh = window.innerHeight;
+      [...pending].forEach((el) => {
+        const r = el.getBoundingClientRect();
+        if (r.top < vh && r.bottom > 0) reveal(el);
+      });
+    }
+  };
+}
+
+function initScrollMotion(){
+  const bar = $("scrollBar");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // k = cuánto y hacia dónde se desplaza cada sticker (alternan sentido y velocidad)
+  const stickers = reduce ? [] : [...document.querySelectorAll(".page .stk")].map((el, i) => ({
+    el, host: el.parentElement, k: (i % 2 ? -1 : 1) * (0.05 + (i % 3) * 0.025),
+  }));
+  const hosts = [...new Set(stickers.map((s) => s.host))];
+  let queued = false;
+
+  function frame(){
+    queued = false;
+    const vh = window.innerHeight;
+    const max = document.documentElement.scrollHeight - vh;
+    bar.style.setProperty("--p", max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)).toFixed(4) : "0");
+    if (scrollFx && max > 0 && window.scrollY >= max - 2) scrollFx.flush();
+    if (!stickers.length) return;
+    // Se mide el contenedor (que no se mueve) y no el sticker: si no, mediría su propio desplazamiento.
+    // Todas las lecturas juntas y después las escrituras, para no forzar layout una y otra vez.
+    const rects = new Map(hosts.map((h) => [h, h.getBoundingClientRect()]));
+    stickers.forEach(({ el, host, k }) => {
+      const r = rects.get(host);
+      if (r.bottom < -300 || r.top > vh + 300) return;    // lejos de la pantalla: no se toca
+      el.style.setProperty("--py", ((r.top + r.height / 2 - vh / 2) * k).toFixed(1));
+    });
+  }
+  const queue = () => { if (!queued){ queued = true; requestAnimationFrame(frame); } };
+  window.addEventListener("scroll", queue, { passive: true });
+  window.addEventListener("resize", queue);
+  frame();
+}
+
+/* ======================================================================
+   ARRANQUE ARRIBA — la invitación siempre tiene que abrir en el hero.
+   Tres cosas la mandaban a la 2da sección: un #hash en la URL (lo dejaba
+   el botón DESLIZÁ), la restauración de scroll del navegador al recargar
+   (Live Server) y links compartidos con el hash ya puesto.
+   ====================================================================== */
+function scrollToTop(){
+  try{
+    if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+  } catch(e){ /* replaceState bloqueado: no es crítico, el scroll igual se resetea */ }
+  window.scrollTo(0, 0);
+}
+
+// DESLIZÁ baja suave a la sección que sigue al hero SIN dejar un #hash en la URL.
+// El href queda como respaldo si el JS no corre.
+function initScrollCue(){
+  const cue = document.querySelector(".scroll-cue");
+  cue.addEventListener("click", (e) => {
+    e.preventDefault();
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    $("detalles").scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  });
+}
+
+/* ======================================================================
+   BOOT SCREEN
+   ====================================================================== */
+function initBootScreen(){
+  const screen = $("bootScreen");
+  function enter(){
+    playBlip(660, 0.12);
+    setTimeout(() => playBlip(880, 0.16), 90);
+    screen.classList.add("is-hidden");
+    document.body.style.overflow = "";
+    scrollToTop();   // después de soltar el overflow; sea cual sea el scroll que dejó el navegador, se entra por el hero
+    document.documentElement.classList.add("entered");
+    $("scrollBar").classList.add("on");
+    if (scrollFx) scrollFx.start();   // arranca la escena de entrada (y el tipeo del hero)
+    screen.removeEventListener("click", enter);
+    setTimeout(() => screen.remove(), 550);
+  }
+  document.body.style.overflow = "hidden";
+  scrollToTop();
+  screen.addEventListener("click", enter);
+  screen.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") enter();
+  });
+}
+
+/* ======================================================================
+   MAPA / "CÓMO LLEGAR"
+   ====================================================================== */
+function initMapButton(){
+  const query = encodeURIComponent(`${EVENT.venueName}, ${EVENT.address}`);
+  // Si hay mapEmbedUrl (el src del iframe de "Insertar un mapa") se usa tal cual;
+  // si no, embed sin API key con una búsqueda por texto vía output=embed.
+  $("mapEmbed").src = EVENT.mapEmbedUrl || `https://www.google.com/maps?q=${query}&output=embed`;
+  // El botón usa el link directo si lo cargaste (coordenadas exactas);
+  // si no, cae a la misma búsqueda por nombre que el embed.
+  $("mapBtn").href = EVENT.venueMapsUrl
+    || `https://www.google.com/maps/search/?api=1&query=${query}`;
+}
+
+/* ======================================================================
+   RSVP — form inline + localStorage + WhatsApp click-to-chat + confetti
+   ====================================================================== */
+function initRsvp(){
+  const storageKey = `invite:${EVENT.id}:rsvp`;
+  const formView = $("rsvpFormView");
+  const thanksView = $("rsvpThanksView");
+  const statusView = $("rsvpStatusView");
+  const form = $("rsvpForm");
+
+  // Confeti = los mismos stickers de la página. Se precargan acá para que
+  // el primer "Confirmar" no tenga que esperar la descarga.
+  const CONFETTI = ["star-chrome", "star-white", "star-glitter", "star-crystal", "sparkle", "hearts-paper", "lips-2"]
+    .map((n) => `img/${n}.webp`);
+  CONFETTI.forEach((src) => { new Image().src = src; });
+
+  function readRsvp(){
+    try { return JSON.parse(localStorage.getItem(storageKey) || "null"); }
+    catch(e){ return null; }
+  }
+  function saveRsvp(data){
+    try { localStorage.setItem(storageKey, JSON.stringify(data)); }
+    catch(e){ /* modo privado / storage bloqueado: igual se manda por WhatsApp */ }
+  }
+
+  // Sitio estático sin backend: la única forma de que la confirmación llegue
+  // de verdad es un link de WhatsApp con el mensaje precargado. No se manda
+  // solo — hace falta que el invitado toque "enviar" del lado suyo.
+  function buildWhatsAppUrl(data){
+    const phone = EVENT.whatsappNumber.replace(/\D/g, "");
+    // split/join en vez de replace: si el nombre trae "$&" o similar, replace lo interpretaría.
+    const template = data.attending ? EVENT.msgSi : EVENT.msgNo;
+    const text = template.split("{nombre}").join(data.name);
+    return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+  }
+
+  // El globo del mono acompaña la respuesta (el texto original vive en el HTML).
+  const bubble = $("rsvpBubble");
+  const bubbleDefault = bubble.textContent;
+
+  function showForm(prefill){
+    formView.hidden = false; thanksView.hidden = true; statusView.hidden = true;
+    bubble.textContent = bubbleDefault;
+    if (prefill){
+      form.elements.rsvpName.value = prefill.name || "";
+      form.elements.attendance.value = prefill.attending ? "yes" : "no";
+    }
+  }
+
+  function showStatus(saved){
+    formView.hidden = true; thanksView.hidden = true; statusView.hidden = false;
+    bubble.textContent = saved.attending ? "¡nos vemos! 💜" : "y sin corazoncito entonces 🥲";
+    const text = saved.attending
+      ? `Confirmaste tu presencia como <strong></strong>.`
+      : `Avisaste que <strong></strong> no podrá asistir.`;
+    $("rsvpStatusText").innerHTML = text;
+    $("rsvpStatusText").querySelector("strong").textContent = saved.name;  // el nombre lo escribe el invitado: nunca como HTML
+    $("statusWhatsappBtn").href = buildWhatsAppUrl(saved);
+  }
+
+  function launchConfetti(){
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    for (let i = 0; i < 26; i++){
+      const piece = document.createElement("img");
+      piece.className = "confetti-piece";
+      piece.src = CONFETTI[Math.floor(Math.random() * CONFETTI.length)];
+      piece.alt = "";
+      const size = 26 + Math.random() * 26;
+      piece.style.left = `${Math.random() * 100}vw`;
+      piece.style.width = `${size}px`;
+      const duration = 2 + Math.random() * 1.6;
+      const rotation = Math.random() * 540 - 270;
+      const sway = Math.random() * 80 - 40;
+      piece.animate([
+        { transform: "translate(0, 0) rotate(0deg)", opacity: 1 },
+        { transform: `translate(${sway}px, ${105 + Math.random() * 15}vh) rotate(${rotation}deg)`, opacity: 0.9 }
+      ], { duration: duration * 1000, easing: "cubic-bezier(.25,.46,.45,.94)", fill: "forwards" });
+      document.body.appendChild(piece);
+      setTimeout(() => piece.remove(), duration * 1000 + 100);
+    }
+  }
+
+  function popMonkey(){
+    const mono = $("rsvpMono");
+    mono.classList.remove("pop");
+    void mono.offsetWidth;            // reinicia la animación si ya se había usado
+    mono.classList.add("pop");
+  }
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const data = {
+      name: form.elements.rsvpName.value.trim(),
+      attending: form.elements.attendance.value === "yes",
+      confirmedAt: new Date().toISOString(),
+    };
+    if (!data.name) return;
+    saveRsvp(data);
+    playBlip(880, 0.12);
+
+    // Se abre en el mismo gesto de click del submit: ningún navegador lo
+    // bloquea como pop-up.
+    window.open(buildWhatsAppUrl(data), "_blank", "noopener");
+
+    formView.hidden = true; thanksView.hidden = false;
+    const thanksImg = $("thanksImg");
+    bubble.textContent = data.attending ? "¡nos vemos! 💜" : "y sin corazoncito entonces 🥲";
+    if (data.attending){
+      thanksImg.hidden = true;
+      $("thanksTitle").textContent = `¡GRACIAS, ${data.name.toUpperCase()}!`;
+      $("thanksMessage").textContent = "Ya tenés tu lugar reservado para festejar 🎉";
+      popMonkey();
+      launchConfetti();
+    } else {
+      thanksImg.hidden = false;
+      $("thanksTitle").textContent = "GRACIAS POR AVISAR";
+      $("thanksMessage").textContent = "Voy a recordar esto 😤 …pero gracias por contarme. ¡Te vamos a extrañar!";
+    }
+    setTimeout(() => showStatus(data), 4200);
+  });
+
+  $("editRsvpBtn").addEventListener("click", () => showForm(readRsvp()));
+
+  const saved = readRsvp();
+  if (saved) showStatus(saved); else showForm(null);
+}
+
+/* ======================================================================
+   SPOTIFY PLAYLIST COLABORATIVA — la sección siempre se muestra. Sin ID
+   aparece el cartel "Playlist en camino"; con ID, el reproductor + un
+   botón para que cada invitado sume su canción.
+   ====================================================================== */
+function initSpotifyPlaylist(){
+  // Los IDs de Spotify tienen 22 caracteres: se extrae ese tramo, así funciona pegando el
+  // ID solo, con el "?si=..." del botón Compartir, o el link completo.
+  const id = ((EVENT.spotifyPlaylistId || "").match(/[A-Za-z0-9]{22}/) || [])[0] || "";
+  $("spotifyEmbedWrap").hidden = !id;
+  $("spotifyActions").hidden = !id;
+  $("spotifyEmpty").hidden = !!id;
+  if (!id) return;
+  $("spotifyEmbed").src = `https://open.spotify.com/embed/playlist/${id}?utm_source=generator&theme=0`;
+  $("spotifyAddBtn").href = EVENT.spotifyInviteUrl || `https://open.spotify.com/playlist/${id}`;
+}
+
+/* ======================================================================
+   INIT
+   ====================================================================== */
+function init(){
+  renderEventContent();
+  initTyping();
+  scrollFx = initScrollFx();
+  initScrollMotion();
+  renderBrand();
+  initMapButton();
+  initRsvp();
+  initSpotifyPlaylist();
+  initScrollCue();
+  initBootScreen();
+}
+
+if (document.readyState === "loading"){
+  document.addEventListener("DOMContentLoaded", init);
+} else {
+  init();
+}
+</script>
+</body>
+</html>

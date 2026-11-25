@@ -72,6 +72,7 @@ const Navbar = () => {
     { href: '#nosotras', label: 'Nosotras' },
     { href: '#servicios', label: 'Servicios' },
     { href: '#soluciones', label: 'Soluciones' },
+    { href: '#portafolio', label: 'Portafolio' },
     { href: '#faq', label: 'FAQ' }
   ];
 
