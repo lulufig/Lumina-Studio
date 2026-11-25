@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 900" width="720" height="900"><defs><linearGradient id="fn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0c1b3f"/><stop offset="1" stop-color="#2a3d75"/></linearGradient><filter id="oleo"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3"/><feColorMatrix values="0 0 0 0 0.5  0 0 0 0 0.45  0 0 0 0 0.35  0 0 0 0.16 0"/><feComposite in2="SourceGraphic" operator="in"/></filter></defs>
+    <rect width="720" height="900" fill="#f1e3c8"/><rect y="620" width="720" height="280" fill="#d9c29a"/>
+    <path d="M150 640 Q170 520 260 520 Q300 560 380 600 L400 650 L170 660Z" fill="#2a3d75"/>
+    <rect x="160" y="650" width="12" height="90" fill="#1b2a56"/>
+    <path d="M340 680 Q360 560 450 560 Q490 600 570 640 L590 690 L360 700Z" fill="#34498c"/>
+    <rect x="350" y="690" width="12" height="90" fill="#1b2a56"/>
+    <polygon points="250.0,533.0 253.2,540.6 261.4,541.3 255.1,546.7 257.1,554.7 250.0,550.4 242.9,554.7 244.9,546.7 238.6,541.3 246.8,540.6" fill="#d9b25f"/><polygon points="440.0,573.0 443.2,580.6 451.4,581.3 445.1,586.7 447.1,594.7 440.0,590.4 432.9,594.7 434.9,586.7 428.6,581.3 436.8,580.6" fill="#d9b25f"/>
+    <path d="M520 300 q40 -80 90 0 q-45 60 -90 0z" fill="#c9a0b0"/><path d="M565 330 V620" stroke="#6f8a5c" stroke-width="6"/>
+    <rect width="720" height="900" filter="url(#oleo)"/></svg>

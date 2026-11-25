@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 700" width="400" height="700"><defs><filter id="st" x="-10%" y="-10%" width="120%" height="120%"><feMorphology in="SourceAlpha" operator="dilate" radius="10" result="d"/><feFlood flood-color="#fff"/><feComposite in2="d" operator="in" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+  <g filter="url(#st)">
+    <rect x="70" y="380" width="260" height="360" rx="40" fill="#b79cf2"/>
+    <path d="M110 400 L290 600" stroke="#e7dcff" stroke-width="40"/>
+    <text x="200" y="510" font-family="Arial Black,Arial" font-size="30" fill="#6d4bc4" text-anchor="middle" transform="rotate(48 200 500)">DEV</text>
+    <ellipse cx="200" cy="260" rx="110" ry="125" fill="#3a2f4f"/>
+    <ellipse cx="200" cy="170" rx="185" ry="45" fill="#6d4bc4"/>
+    <path d="M110 170 Q120 60 200 70 Q280 60 290 170Z" fill="#b79cf2"/>
+    <path d="M115 150 H285" stroke="#ffd35c" stroke-width="12"/>
+    <circle cx="165" cy="270" r="10" fill="#fff"/><circle cx="235" cy="270" r="10" fill="#fff"/>
+    <path d="M175 315 q25 22 50 0" fill="none" stroke="#f3b6d1" stroke-width="7" stroke-linecap="round"/>
+  </g></svg>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Mis XV — Valentina</title>
+<meta name="description" content="Sábado 20 de marzo de 2027 · Salón Los Aromos, Tucumán · Demo Lúmina" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="theme-color" content="#0c1b3f" />
+<meta property="og:title" content="Mis XV — Valentina" />
+<meta property="og:description" content="Sábado 20 de marzo · Tenés una carta para abrir" />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="fotos/retrato.svg" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=Pinyon+Script&display=swap">
+<link rel="stylesheet" href="css/estilos.css?v=9" />
+</head>
+<body class="cerrada">
+
+<!-- ============ APERTURA: el sobre lacrado ============ -->
+<div id="apertura" class="apertura" role="dialog" aria-label="Invitación cerrada">
+  <div class="apertura-encabezado">
+    <p class="apertura-de">Tenés una carta de</p>
+    <p class="apertura-nombre">Valentina</p>
+  </div>
+
+  <button class="sobre" id="abrirSobre" aria-label="Abrir la invitación">
+    <span class="sobre-fondo"></span>
+    <span class="sobre-carta"><span>Mis quince</span></span>
+    <span class="sobre-frente"></span>
+    <span class="sobre-solapa"></span>
+    <span class="lacre" aria-hidden="true"><span class="lacre-mitad izq"></span><span class="lacre-mitad der"></span><i>V</i></span>
+    <span class="sobre-sello-postal" aria-hidden="true"><canvas id="estampillaSobre"></canvas></span>
+  </button>
+
+  <p class="apertura-ayuda">Tocá el lacre para abrirla</p>
+</div>
+
+<button id="botonMusica" class="boton-musica" hidden aria-label="Pausar música">
+  <span class="ondas" aria-hidden="true"><i></i><i></i><i></i></span>
+</button>
+
+<main>
+
+  <!-- ============ PORTADA ============ -->
+  <section id="portada" class="portada">
+    <div class="lienzo-mov" id="portadaMov">
+      <canvas id="cieloPortada" class="cielo" aria-hidden="true"></canvas>
+      <canvas id="estelaPortada" class="cielo estela" aria-hidden="true"></canvas>
+    </div>
+    <div class="trama" aria-hidden="true"></div>
+
+    <div class="rotulo" id="portadaTexto">
+      <span class="cinta cinta-a" aria-hidden="true"></span>
+      <span class="cinta cinta-b" aria-hidden="true"></span>
+      <p class="rotulo-mis">mis quince</p>
+      <h1 class="rotulo-nombre">Valentina</h1>
+      <p class="rotulo-fecha">20 · III · 2027</p>
+    </div>
+
+    <a class="seguir" href="#carta">seguí bajando</a>
+  </section>
+
+  <!-- ============ LA CARTA ============ -->
+  <section id="carta" class="papel">
+    <article class="carta revelar">
+      <div class="estampilla" aria-hidden="true"><canvas id="estampillaCarta"></canvas></div>
+      <svg class="matasellos" viewBox="0 0 120 120" aria-hidden="true">
+        <defs><path id="circMat" d="M60 60 m-44 0 a44 44 0 1 1 88 0 a44 44 0 1 1 -88 0"/></defs>
+        <circle cx="60" cy="60" r="52" fill="none" stroke="currentColor" stroke-width="2.4"/>
+        <circle cx="60" cy="60" r="36" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <text font-size="11.5" letter-spacing="2.4" fill="currentColor"><textPath href="#circMat">TUCUMÁN · ARGENTINA · CORREO ·</textPath></text>
+        <text x="60" y="57" text-anchor="middle" font-size="13" fill="currentColor">20 MAR</text>
+        <text x="60" y="73" text-anchor="middle" font-size="13" fill="currentColor">2027</text>
+      </svg>
+
+      <p class="carta-lugar">San Miguel de Tucumán, marzo de 2027</p>
+      <p class="carta-texto capitular">Con el corazón lleno de sueños y bajo un cielo iluminado por estrellas, se abre un capítulo único y especial en la vida de una joven que hoy celebra su luz, su esencia y su historia.</p>
+      <p class="carta-texto">Sus quince años marcan el inicio de una etapa llena de ilusión, magia y nuevos caminos por descubrir.</p>
+      <p class="carta-texto">Será un verdadero honor contar con su presencia para compartir juntos esta noche inolvidable.</p>
+      <p class="carta-firma">Valentina</p>
+    </article>
+  </section>
+
+  <!-- ============ CUENTA REGRESIVA ============ -->
+  <section id="cuenta" class="noche" data-cielo="11" data-estrellas-por="320">
+    <canvas class="cielo" aria-hidden="true"></canvas>
+    <div class="trama" aria-hidden="true"></div>
+    <div class="noche-velo" aria-hidden="true"></div>
+
+    <div class="bloque">
+      <p class="numeral">I</p>
+      <h2 class="titulo">Faltan</h2>
+      <div class="contador" id="contador">
+        <div><b data-u="dias">00</b><small>días</small></div>
+        <div><b data-u="horas">00</b><small>horas</small></div>
+        <div><b data-u="min">00</b><small>minutos</small></div>
+        <div><b data-u="seg">00</b><small>segundos</small></div>
+      </div>
+      <p class="visualmente-oculto" id="contadorLector" aria-live="off"></p>
+      <p class="fecha-larga">el sábado 20 de marzo, a las 22:00</p>
+      <a class="boton boton-papel" id="botonAgendar" href="#" target="_blank" rel="noopener">Agendar en Google Calendar</a>
+    </div>
+
+    <div class="bloque bloque-programa" id="programa">
+      <p class="numeral">II</p>
+      <h2 class="titulo">La noche</h2>
+      <ol class="linea-tiempo" id="programaLista"></ol>
+      <span class="linea-estrella" id="lineaEstrella" aria-hidden="true"></span>
+    </div>
+  </section>
+
+  <!-- ============ SALA: retrato + galería ============ -->
+  <section id="sala" class="sala">
+    <div class="bloque bloque-claro">
+      <p class="numeral">III</p>
+      <h2 class="titulo">La sala de retratos</h2>
+    </div>
+
+    <figure class="cuadro revelar">
+      <div class="marco">
+        <div class="marco-lienzo"><img src="fotos/retrato.svg" data-grande="fotos/retrato.svg" alt="Pintura de una tiara bajo la luna" id="fotoRetrato" decoding="async"></div>
+      </div>
+      <figcaption class="placa">
+        <strong>Valentina</strong>
+        <span>Quince años · 2027</span>
+        <em>Óleo sobre su propia historia</em>
+      </figcaption>
+    </figure>
+
+    <nav class="indice-sala" id="indiceSala" aria-label="Capítulos de la galería"></nav>
+    <div class="capitulos" id="capitulos"></div>
+  </section>
+
+  <!-- ============ LUGAR ============ -->
+  <section id="lugar" class="papel">
+    <div class="bloque">
+      <p class="numeral">IV</p>
+      <h2 class="titulo">Dónde</h2>
+      <p class="lugar-nombre">Salón Los Aromos</p>
+      <p class="lugar-dir">Av. Siempre Viva 1234<br>San Miguel de Tucumán</p>
+      <a class="boton" id="botonComoLlegar" href="#" target="_blank" rel="noopener">Cómo llegar</a>
+    </div>
+    <div class="marco marco-mapa revelar">
+      <div class="marco-lienzo"><iframe id="mapa" title="Mapa de Salón Los Aromos" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+    </div>
+  </section>
+
+  <!-- ============ VESTIMENTA ============ -->
+  <section id="vestimenta" class="papel papel-2">
+    <div class="bloque">
+      <p class="numeral">V</p>
+      <h2 class="titulo">Vestimenta</h2>
+      <p class="vestimenta-codigo">Elegante</p>
+      <canvas class="muestra-azul revelar" id="muestraAzul" aria-hidden="true"></canvas>
+      <p class="vestimenta-nota">El azul queda reservado para la cumpleañera.</p>
+    </div>
+  </section>
+
+  <!-- ============ CONFIRMACIÓN ============ -->
+  <section id="confirmar" class="noche" data-cielo="41">
+    <canvas class="cielo" aria-hidden="true"></canvas>
+    <div class="trama" aria-hidden="true"></div>
+    <div class="noche-velo" aria-hidden="true"></div>
+
+    <div class="bloque">
+      <p class="numeral">VI</p>
+      <h2 class="titulo">¿Venís?</h2>
+      <p class="bajada">Respondé esta carta antes del 1 de marzo.</p>
+
+      <div id="rsvpInicio" class="rsvp-inicio">
+        <button class="lacre lacre-boton" id="lacreResponder" aria-controls="rsvpForm" aria-label="Responder la invitación"><i>V</i></button>
+        <p class="ayuda">Tocá el lacre para responder</p>
+      </div>
+
+      <form id="rsvpForm" class="rsvp" hidden>
+        <label class="campo">
+          <span>Nombre y apellido</span>
+          <input name="nombre" autocomplete="name" required maxlength="80">
+        </label>
+        <fieldset class="opciones">
+          <legend>Asistencia</legend>
+          <label><input type="radio" name="asiste" value="si" checked><span>Voy</span></label>
+          <label><input type="radio" name="asiste" value="no"><span>No puedo</span></label>
+        </fieldset>
+        <button class="boton boton-tinta" type="submit">Enviar por WhatsApp</button>
+      </form>
+
+      <div id="rsvpListo" class="rsvp rsvp-listo" hidden>
+        <p class="rsvp-titulo" id="rsvpTitulo"></p>
+        <p id="rsvpTexto"></p>
+        <a class="boton boton-tinta" id="rsvpReenviar" href="#" target="_blank" rel="noopener">Reenviar por WhatsApp</a>
+        <button class="boton-texto" id="rsvpEditar" type="button">Editar mi respuesta</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ REGALO ============ -->
+  <section id="regalo" class="papel">
+    <div class="bloque">
+      <p class="numeral">VII</p>
+      <h2 class="titulo">Un presente</h2>
+      <p class="regalo-texto">Tu presencia es mi mejor regalo, pero si deseás hacerme un presente, aquí te dejo una opción.</p>
+      <div class="regalo-vale revelar">
+        <p class="regalo-etiqueta">Alias</p>
+        <p class="regalo-alias" id="alias">valen.xv.demo</p>
+        <button class="boton" id="copiarAlias" type="button">Copiar alias</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ÁLBUM COMPARTIDO ============ -->
+  <section id="album" class="papel">
+    <div class="bloque">
+      <p class="numeral">VIII</p>
+      <h2 class="titulo">Nuestro álbum</h2>
+      <p class="regalo-texto">Esa noche cada uno va a ver la fiesta desde su lugar. Subí tus fotos y videos para que juntemos todas las miradas en un solo álbum.</p>
+      <div class="album-sobre revelar">
+        <span class="album-esquina a" aria-hidden="true"></span><span class="album-esquina b" aria-hidden="true"></span>
+        <span class="album-esquina c" aria-hidden="true"></span><span class="album-esquina d" aria-hidden="true"></span>
+        <p class="regalo-etiqueta">Álbum compartido</p>
+        <p class="album-nota">En la invitación real se abre una carpeta de Google Drive</p>
+        <a class="boton" href="#album">Subir mis fotos</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CIERRE ============ -->
+  <footer id="cierre" class="noche cierre" data-cielo="5">
+    <canvas class="cielo" aria-hidden="true"></canvas>
+    <div class="trama" aria-hidden="true"></div>
+    <div class="noche-velo" aria-hidden="true"></div>
+    <div class="cierre-gracias">
+      <p class="cierre-frase">Gracias por ser parte de mi noche estrellada</p>
+      <p class="firma">Valentina</p>
+    </div>
+    <p class="credito">
+      <a href="https://wa.me/5493865690028?text=%C2%A1Hola%20Lourdes!%20Vi%20una%20invitaci%C3%B3n%20que%20dise%C3%B1aste%20y%20quer%C3%ADa%20consultarte." target="_blank" rel="noopener" aria-label="Invitación diseñada por Lourdes Figueroa. Escribile por WhatsApp">Diseñada por <span class="credito-nombre">Lourdes Figueroa</span> <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12.05 2C6.53 2 2.06 6.47 2.06 11.99c0 1.76.46 3.48 1.34 5L2 22l5.14-1.35a9.9 9.9 0 0 0 4.9 1.25c5.52 0 9.99-4.47 9.99-9.99C22.03 6.47 17.57 2 12.05 2zm0 18.2a8.2 8.2 0 0 1-4.18-1.14l-.3-.18-3.05.8.81-2.97-.2-.31a8.2 8.2 0 1 1 6.92 3.8zm4.5-6.14c-.25-.12-1.47-.72-1.7-.8-.23-.09-.39-.13-.56.12-.16.25-.64.8-.78.97-.15.16-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.38-1.72-.15-.25-.02-.38.11-.5.11-.12.25-.29.37-.44.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.44-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.42h-.48a.92.92 0 0 0-.66.31c-.23.25-.87.85-.87 2.07s.89 2.4 1.01 2.57c.12.16 1.75 2.67 4.24 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.08.15-1.18-.06-.1-.23-.17-.48-.29z"/></svg></a>
+    </p>
+  </footer>
+</main>
+
+<dialog id="visor" class="visor" aria-label="Foto ampliada">
+  <button class="visor-cerrar" id="visorCerrar" aria-label="Cerrar">×</button>
+  <div class="visor-pista" id="visorPista"></div>
+  <p class="visor-contador" id="visorContador"></p>
+</dialog>
+
+<p class="aviso" id="aviso" role="status" aria-live="polite"></p>
+<audio id="musica" loop preload="none"></audio>
+
+<script src="js/cielo.js?v=9"></script>
+<script src="js/main.js?v=9"></script>
+</body>
+</html>

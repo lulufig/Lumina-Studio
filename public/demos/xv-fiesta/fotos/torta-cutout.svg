@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 880" width="750" height="880"><defs><filter id="st" x="-10%" y="-10%" width="120%" height="120%"><feMorphology in="SourceAlpha" operator="dilate" radius="9" result="d"/><feFlood flood-color="#fff"/><feComposite in2="d" operator="in" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+  <g filter="url(#st)">
+    <rect x="95" y="610" width="560" height="190" rx="28" fill="#cfe0ff"/>
+    <rect x="165" y="430" width="420" height="190" rx="24" fill="#ffffff"/>
+    <rect x="245" y="290" width="260" height="150" rx="20" fill="#cfe0ff"/>
+    <path d="M95 660 q47 45 93 0 q47 45 93 0 q47 45 93 0 q47 45 93 0 q47 45 93 0 q47 45 93 0" fill="none" stroke="#5b8de8" stroke-width="14" stroke-linecap="round"/>
+    <path d="M165 480 q42 40 84 0 q42 40 84 0 q42 40 84 0 q42 40 84 0 q42 40 84 0" fill="none" stroke="#c0c7d6" stroke-width="12" stroke-linecap="round"/>
+    <rect x="291" y="190" width="18" height="100" rx="6" fill="#5b8de8" stroke="#9fb3d9" stroke-width="3"/><path d="M300 150 q22 25 0 45 q-22 -20 0 -45z" fill="#ffc94d"/><rect x="366" y="200" width="18" height="90" rx="6" fill="#ffffff" stroke="#9fb3d9" stroke-width="3"/><path d="M375 160 q22 25 0 45 q-22 -20 0 -45z" fill="#ffc94d"/><rect x="441" y="190" width="18" height="100" rx="6" fill="#5b8de8" stroke="#9fb3d9" stroke-width="3"/><path d="M450 150 q22 25 0 45 q-22 -20 0 -45z" fill="#ffc94d"/>
+    <circle cx="180" cy="730" r="12" fill="#ffffff"/><circle cx="300" cy="730" r="12" fill="#ffffff"/><circle cx="430" cy="730" r="12" fill="#ffffff"/><circle cx="560" cy="730" r="12" fill="#ffffff"/>
+    <rect x="70" y="795" width="610" height="30" rx="15" fill="#c0c7d6"/>
+  </g>
+  <polygon points="140.0,270.0 147.9,289.1 168.5,290.7 152.8,304.2 157.6,324.3 140.0,313.5 122.4,324.3 127.2,304.2 111.5,290.7 132.1,289.1" fill="#5b8de8"/><polygon points="640.0,198.0 645.8,212.0 660.9,213.2 649.4,223.1 652.9,237.8 640.0,229.9 627.1,237.8 630.6,223.1 619.1,213.2 634.2,212.0" fill="#c0c7d6"/>
+</svg>
